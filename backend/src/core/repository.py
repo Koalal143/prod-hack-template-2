@@ -1,9 +1,12 @@
-from typing import TypeVar, Type
+from typing import TypeVar, Type, Generic
 from sqlalchemy.ext.asyncio import AsyncSession
+from pydantic import BaseModel
 from core.db import Base
 
 
 model_type = TypeVar("model_type", bound=Base)
+create_schema_type = TypeVar("create_schema_type", bound=BaseModel)
+update_schema_type = TypeVar("update_schema_type", bound=BaseModel)
 
 
 class BaseRepository:
@@ -19,18 +22,23 @@ class BaseRepository:
         await self.session.delete(instance)
         await self.session.commit()
 
-    async def update(self, instance: model_type, **attrs: dict) -> model_type:
-        for key, value in attrs:
+    async def update(self, instance: model_type, schema: update_schema_type) -> model_type:
+        data = schema.model_dump(exclude_unset=True)
+        for key, value in data.items():
             setattr(instance, key, value)
 
         await self.session.commit()
         await self.session.refresh(instance)
         return instance
 
-    async def create(self, **attrs: dict) -> model_type:
-        instance = self.model(**attrs)
-
+    async def create(self, schema: create_schema_type) -> model_type:
+        instance = self.model(**schema.model_dump())
         self.session.add(instance)
-        await self.session.commit()
-        await self.session.refresh(instance)
-        return instance
+
+        try:
+            await self.session.commit()
+            await self.session.refresh(instance)
+            return instance
+        except Exception:
+            await self.session.rollback()
+            raise
