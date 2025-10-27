@@ -10,7 +10,6 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_DB: str
     POSTGRES_PASSWORD: str
-    HOST_NAME: str
 
     @property
     def DATABASE_URL(self) -> str:
