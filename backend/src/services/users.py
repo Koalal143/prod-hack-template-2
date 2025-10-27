@@ -1,4 +1,7 @@
-class UserService:
+from core.service import BaseService
+
+
+class UserService(BaseService):
     async def register(self):
         pass
 
