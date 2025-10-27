@@ -9,7 +9,7 @@ create_schema_type = TypeVar("create_schema_type", bound=BaseModel)
 update_schema_type = TypeVar("update_schema_type", bound=BaseModel)
 
 
-class BaseRepository:
+class BaseRepository(Generic[model_type]):
     model: Type[model_type]
 
     def __init__(self, session: AsyncSession):
