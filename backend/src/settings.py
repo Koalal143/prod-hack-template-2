@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_HOST: str
     POSTGRES_DB: str
+    HOST_NAME: str = "localhost"
     POSTGRES_PASSWORD: str
 
     @property

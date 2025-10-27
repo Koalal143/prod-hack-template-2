@@ -3,7 +3,9 @@ from contextlib import asynccontextmanager
 import time
 
 from fastapi import APIRouter, FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 
+from settings import settings
 
 logging.basicConfig(level=logging.INFO)
 
@@ -37,6 +39,14 @@ def create_app() -> FastAPI:
         process_time = time.perf_counter() - start_time
         response.headers["X-Process-Time"] = str(round(process_time, 4))
         return response
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[settings.HOST_NAME, "localhost"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     return app
 
