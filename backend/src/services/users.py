@@ -5,7 +5,7 @@ class UserService:
     async def login(self):
         pass
 
-    async def log_out(self):
+    async def logout(self):
         pass
 
     async def refresh_token(self):

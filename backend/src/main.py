@@ -6,6 +6,8 @@ from fastapi import APIRouter, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from settings import settings
+from api.v1.users import user_rt
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -19,7 +21,7 @@ async def lifespan(app: FastAPI):
 
 def create_main_router():
     router = APIRouter(prefix="/api/v1")
-    # router.include_router() подключаем другие роутеры
+    router.include_router(user_rt)
     return router
 
 
