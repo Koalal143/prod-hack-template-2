@@ -21,7 +21,7 @@ def create_main_router():
     return router
 
 
-app = FastAPI(docs_url="/api/docs", redoc_url="/api/redoc", lifespan=lifespan)
+app = FastAPI(docs_url="/api/v1/docs", redoc_url="/api/v1/redoc", lifespan=lifespan)
 app.include_router(create_main_router())
 
 
