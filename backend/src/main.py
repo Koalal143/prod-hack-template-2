@@ -2,12 +2,12 @@ import logging
 from contextlib import asynccontextmanager
 import time
 
-from fastapi import APIRouter, FastAPI, Request
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from core.db import init_db
 from settings import settings
-from api.v1.users import user_rt
+from api.router import api_rt
 
 
 logging.basicConfig(level=logging.INFO)
@@ -20,20 +20,14 @@ async def lifespan(app: FastAPI):
     # что-то после
 
 
-def create_main_router():
-    router = APIRouter(prefix="/api/v1")
-    router.include_router(user_rt)
-    return router
-
-
 def create_app() -> FastAPI:
     app = FastAPI(
-        docs_url="/api/v1/docs",
-        redoc_url="/api/v1/redoc",
+        docs_url="/api/docs",
+        redoc_url="/api/redoc",
         lifespan=lifespan,
     )
 
-    app.include_router(create_main_router())
+    app.include_router(api_rt)
 
     @app.middleware("http")
     async def add_process_time_header(request: Request, call_next):
