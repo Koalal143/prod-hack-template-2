@@ -5,6 +5,7 @@ import time
 from fastapi import APIRouter, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+from core.db import init_db
 from settings import settings
 from api.v1.users import user_rt
 
@@ -14,7 +15,7 @@ logging.basicConfig(level=logging.INFO)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # что-то до старта
+    await init_db() # добавьте alembic пж, пока эта затычка
     yield
     # что-то после
 
