@@ -5,6 +5,9 @@ import time
 from fastapi import APIRouter, FastAPI, Request
 
 
+logging.basicConfig(level=logging.INFO)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # что-то до старта
@@ -18,7 +21,7 @@ def create_main_router():
     return router
 
 
-app = FastAPI(docs_url="/api/docs", redoc_url="/api/redoc")
+app = FastAPI(docs_url="/api/docs", redoc_url="/api/redoc", lifespan=lifespan)
 app.include_router(create_main_router())
 
 
