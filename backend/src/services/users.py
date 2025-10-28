@@ -5,8 +5,11 @@ from sqlalchemy.exc import IntegrityError
 
 from core.service import BaseService
 from core.auth.security import get_password_hash, create_token, verify_password
-from errors.users import UserWithEmailAlreadyExistsError, UserNotFoundError, \
-    UserPasswordIsIncorrectError
+from errors.users import (
+    UserWithEmailAlreadyExistsError,
+    UserNotFoundError,
+    UserPasswordIsIncorrectError,
+)
 from models.users import User
 from repositories.users import UserRepository
 from schemas.users import UserCreateSchema, UserLoginSchema
@@ -28,7 +31,9 @@ class UserService(BaseService[UserRepository]):
         except IntegrityError:
             raise UserWithEmailAlreadyExistsError
 
-        token = create_token(data={"sub": str(user.email)}, expires_delta=timedelta(hours=7))
+        token = create_token(
+            data={"sub": str(user.email)}, expires_delta=timedelta(hours=7)
+        )
         return user, token
 
     async def login(self, user_login: UserLoginSchema) -> str:
@@ -41,7 +46,6 @@ class UserService(BaseService[UserRepository]):
 
         token = create_token(data={"sub": user.email}, expires_delta=timedelta(hours=7))
         return token
-
 
     async def logout(self):
         pass

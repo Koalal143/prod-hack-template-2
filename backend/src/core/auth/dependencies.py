@@ -9,12 +9,9 @@ from models.users import User
 from repositories.users import UserRepository
 
 
-
 async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(
-        HTTPBearer()
-    ),
-    repo: UserRepository = Depends(get_user_repository)
+    credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
+    repo: UserRepository = Depends(get_user_repository),
 ) -> User:
     payload = verify_token(credentials.credentials)
     if payload is None:

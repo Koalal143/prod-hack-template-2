@@ -3,6 +3,7 @@ from models.users import User
 
 from sqlalchemy import select
 
+
 class UserRepository(BaseRepository[User]):
     model = User
 

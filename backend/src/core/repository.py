@@ -22,7 +22,9 @@ class BaseRepository(Generic[model_type]):
         await self.session.delete(instance)
         await self.session.commit()
 
-    async def update(self, instance: model_type, data: update_schema_type | dict) -> model_type:
+    async def update(
+        self, instance: model_type, data: update_schema_type | dict
+    ) -> model_type:
         if isinstance(data, BaseModel):
             data = data.model_dump(exclude_unset=True)
 

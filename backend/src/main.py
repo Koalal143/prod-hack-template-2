@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await init_db() # добавьте alembic пж, пока эта затычка
+    await init_db()  # добавьте alembic пж, пока эта затычка
     yield
     # что-то после
 
@@ -46,5 +46,6 @@ def create_app() -> FastAPI:
     )
 
     return app
+
 
 app = create_app()

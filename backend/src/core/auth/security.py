@@ -23,17 +23,12 @@ def create_token(data: dict, expires_delta: timedelta) -> str:
         expire = datetime.now(timezone.utc) + expires_delta
         to_encode.update({"exp": expire})
 
-    return jwt.encode(
-        to_encode, settings.SECRET_KEY, algorithm="HS256"
-    )
-
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm="HS256")
 
 
 def verify_token(token: str) -> TokenPayload | None:
     try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=["HS256"]
-        )
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
 
         token_data = TokenPayload(**payload)
         return token_data
