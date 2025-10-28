@@ -22,8 +22,10 @@ class BaseRepository(Generic[model_type]):
         await self.session.delete(instance)
         await self.session.commit()
 
-    async def update(self, instance: model_type, schema: update_schema_type) -> model_type:
-        data = schema.model_dump(exclude_unset=True)
+    async def update(self, instance: model_type, data: update_schema_type | dict) -> model_type:
+        if isinstance(data, BaseModel):
+            data = data.model_dump(exclude_unset=True)
+
         for key, value in data.items():
             setattr(instance, key, value)
 
@@ -31,8 +33,12 @@ class BaseRepository(Generic[model_type]):
         await self.session.refresh(instance)
         return instance
 
-    async def create(self, schema: create_schema_type) -> model_type:
-        instance = self.model(**schema.model_dump())
+    async def create(self, data: create_schema_type | dict) -> model_type:
+        if isinstance(data, BaseModel):
+            instance = self.model(**data.model_dump())
+        else:
+            instance = self.model(**data)
+
         self.session.add(instance)
 
         try:

@@ -1,10 +1,9 @@
 from pydantic import BaseModel
 
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
-
-
 class TokenPayload(BaseModel):
     sub: str
+
+
+class TokenReadSchema(BaseModel):
+    access_token: str

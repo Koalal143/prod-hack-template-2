@@ -1,29 +1,27 @@
 from datetime import timedelta, datetime, timezone
 
-from passlib.context import CryptContext
+from passlib.hash import pbkdf2_sha256
 from pydantic import ValidationError
 from jose import jwt, JWTError
 
 from settings import settings
 from schemas.token import TokenPayload
 
-pwd_context = CryptContext(schemes=["bcrypt"])
-
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    return pbkdf2_sha256.verify(plain_password, hashed_password)
 
 
 def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+    return pbkdf2_sha256.hash(password)
 
 
-def create_token(data: dict, token_type: str, expires_delta: timedelta) -> str:
+def create_token(data: dict, expires_delta: timedelta) -> str:
     to_encode = data.copy()
 
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
-        to_encode.update({"exp": expire, "type": token_type})
+        to_encode.update({"exp": expire})
 
     return jwt.encode(
         to_encode, settings.SECRET_KEY, algorithm="HS256"
