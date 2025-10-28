@@ -13,11 +13,9 @@ user_rt = APIRouter(prefix="/users")
 #     pass
 #
 #
-@user_rt.post("/auth/register", tags=["Пользователи"])
-async def register(user_create: UserCreateSchema, user_service: UserService = Depends(get_user_service)):
-    pass
-
-
+# @user_rt.post("/auth/register", tags=["Пользователи"])
+# async def register(user_create: UserCreateSchema, user_service: UserService = Depends(get_user_service)):
+#     pass
 #
 #
 # @user_rt.post("/auth/login", tags=["Пользователи"])

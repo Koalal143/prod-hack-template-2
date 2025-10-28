@@ -18,12 +18,12 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def create_token(data: dict, token_type: str, expires_delta: timedelta) -> str:
+def create_token(data: dict, expires_delta: timedelta) -> str:
     to_encode = data.copy()
 
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
-        to_encode.update({"exp": expire, "type": token_type})
+        to_encode.update({"exp": expire})
 
     return jwt.encode(
         to_encode, settings.SECRET_KEY, algorithm="HS256"

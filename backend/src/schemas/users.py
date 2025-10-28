@@ -24,8 +24,16 @@ def is_correct_password(value: str) -> str:
 PasswordStr = Annotated[str, AfterValidator(is_correct_password)]
 
 
-class UserCreateSchema(BaseModel):
+class UserBaseSchema(BaseModel):
     first_name: str
     second_name: str
     email: EmailStr
+
+
+class UserCreateSchema(UserBaseSchema):
     password: PasswordStr
+
+
+class UserRegisterReadSchema(UserCreateSchema):
+    access_token: str
+    refresh_token: str
