@@ -4,8 +4,8 @@ from passlib.hash import pbkdf2_sha256
 from pydantic import ValidationError
 from jose import jwt, JWTError
 
-from settings import settings
-from schemas.token import TokenPayload
+from src.settings import settings
+from src.schemas.tokens import TokenPayload
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:

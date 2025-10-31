@@ -1,8 +1,8 @@
 from fastapi.params import Depends
 
-from core.dependencies import SessionDep
-from services.users import UserService
-from repositories.users import UserRepository
+from src.core.dependencies import SessionDep
+from src.services.users import UserService
+from src.repositories.users import UserRepository
 
 
 async def get_user_repository(session: SessionDep) -> UserRepository:

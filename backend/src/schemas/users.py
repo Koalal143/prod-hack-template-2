@@ -1,7 +1,7 @@
 import re
 from typing import Annotated
 
-from pydantic import BaseModel, EmailStr, ValidationError, AfterValidator
+from pydantic import BaseModel, EmailStr, AfterValidator
 
 
 def is_correct_password(value: str) -> str:

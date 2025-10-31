@@ -5,9 +5,9 @@ import time
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
-from core.db import init_db
-from settings import settings
-from api.router import api_rt
+from src.core.db import init_db
+from src.settings import settings
+from src.api.router import api_rt
 
 
 logging.basicConfig(level=logging.INFO)

@@ -3,16 +3,16 @@ from typing import Tuple
 
 from sqlalchemy.exc import IntegrityError
 
-from core.service import BaseService
-from core.auth.security import get_password_hash, create_token, verify_password
-from errors.users import (
+from src.core.service import BaseService
+from src.core.auth.security import get_password_hash, create_token, verify_password
+from src.errors.users import (
     UserWithEmailAlreadyExistsError,
     UserNotFoundError,
     UserPasswordIsIncorrectError,
 )
-from models.users import User
-from repositories.users import UserRepository
-from schemas.users import UserCreateSchema, UserLoginSchema
+from src.models.users import User
+from src.repositories.users import UserRepository
+from src.schemas.users import UserCreateSchema, UserLoginSchema
 
 
 class UserService(BaseService[UserRepository]):

@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from fastapi import Depends
 
-from core.db import engine
+from src.core.db import engine
 
 
 async def get_db_session() -> AsyncSession:

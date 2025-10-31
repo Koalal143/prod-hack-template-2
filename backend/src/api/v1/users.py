@@ -8,10 +8,10 @@ from errors.users import (
     UserNotFoundError,
     UserPasswordIsIncorrectError,
 )
-from models.users import User
-from schemas.token import TokenReadSchema
-from services.users import UserService
-from schemas.users import (
+from src.models.users import User
+from src.schemas.tokens import TokenReadSchema
+from src.services.users import UserService
+from src.schemas.users import (
     UserCreateSchema,
     UserRegisterReadSchema,
     UserLoginSchema,

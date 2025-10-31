@@ -3,10 +3,10 @@ from http.client import HTTPException
 from fastapi import Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-from core.auth.security import verify_token
-from dependencies.users import get_user_repository
-from models.users import User
-from repositories.users import UserRepository
+from src.core.auth.security import verify_token
+from src.dependencies.users import get_user_repository
+from src.models.users import User
+from src.repositories.users import UserRepository
 
 
 async def get_current_user(

@@ -1,5 +1,5 @@
-from core.repository import BaseRepository
-from models.users import User
+from src.core.repository import BaseRepository
+from src.models.users import User
 
 from sqlalchemy import select
 

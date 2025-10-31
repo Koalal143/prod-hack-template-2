@@ -1,4 +1,4 @@
-from core.error import ApplicationError
+from src.core.error import ApplicationError
 
 
 class UserWithEmailAlreadyExistsError(ApplicationError):
