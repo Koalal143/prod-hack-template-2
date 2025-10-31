@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 
 from src.core.auth.dependencies import get_current_user
-from src.core.error import NotFoundError, AccessError
+from src.core.error import NotFoundError, AccessError, ConflictError
 from src.models.users import User
 from src.schemas.tokens import TokenReadSchema
 from src.services.users import UserService, get_user_service
@@ -25,7 +25,7 @@ async def register(
     try:
         user, token = await user_service.register(user_create)
         user.access_token = token
-    except UserWithEmailAlreadyExistsError:
+    except ConflictError:
         raise HTTPException(
             status_code=400,
             detail="Пользователь с такой электронной почтой уже зарегистрирован.",
