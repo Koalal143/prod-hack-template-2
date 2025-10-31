@@ -4,13 +4,9 @@ from typing import Tuple
 from fastapi import Depends
 from sqlalchemy.exc import IntegrityError
 
+from src.core.error import ConflictError, NotFoundError, AccessError
 from src.core.service import BaseService
 from src.core.auth.security import get_password_hash, create_token, verify_password
-from src.errors.users import (
-    UserWithEmailAlreadyExistsError,
-    UserNotFoundError,
-    UserPasswordIsIncorrectError,
-)
 from src.models.users import User
 from src.repositories.users import UserRepository, get_user_repository
 from src.schemas.users import UserCreateSchema, UserLoginSchema
@@ -30,7 +26,7 @@ class UserService(BaseService[UserRepository]):
         try:
             user = await self.repository.create(user_create_dict)
         except IntegrityError:
-            raise UserWithEmailAlreadyExistsError
+            raise ConflictError
 
         token = create_token(
             data={"sub": str(user.email)}, expires_delta=timedelta(hours=7)
@@ -40,10 +36,10 @@ class UserService(BaseService[UserRepository]):
     async def login(self, user_login: UserLoginSchema) -> str:
         user = await self.repository.get_by_email(user_login.email)
         if user is None:
-            raise UserNotFoundError
+            raise NotFoundError
 
         if not verify_password(user_login.password, user.password_hash):
-            raise UserPasswordIsIncorrectError
+            raise AccessError
 
         token = create_token(data={"sub": user.email}, expires_delta=timedelta(hours=7))
         return token

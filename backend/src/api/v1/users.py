@@ -2,11 +2,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 
 from src.core.auth.dependencies import get_current_user
-from src.errors.users import (
-    UserWithEmailAlreadyExistsError,
-    UserNotFoundError,
-    UserPasswordIsIncorrectError,
-)
+from src.core.error import NotFoundError, AccessError
 from src.models.users import User
 from src.schemas.tokens import TokenReadSchema
 from src.services.users import UserService, get_user_service
@@ -44,11 +40,11 @@ async def login(
 ):
     try:
         token = await user_service.login(user_login)
-    except UserNotFoundError:
+    except NotFoundError:
         raise HTTPException(
             status_code=404, detail="Пользователь с таким email не найден."
         )
-    except UserPasswordIsIncorrectError:
+    except AccessError:
         raise HTTPException(status_code=403, detail="Неверный пароль.")
 
     return TokenReadSchema(access_token=token)

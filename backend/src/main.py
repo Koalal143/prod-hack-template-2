@@ -5,7 +5,7 @@ import time
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.core.db import init_db
+from src.core.db.engine import init_db
 from src.settings import settings
 from src.api.router import api_rt
 

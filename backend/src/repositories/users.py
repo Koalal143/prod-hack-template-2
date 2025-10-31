@@ -1,6 +1,6 @@
 from pydantic import EmailStr
 
-from src.core.dependencies import SessionDep
+from src.core.db.dependencies import SessionDep
 from src.core.repository import BaseRepository
 from src.models.users import User
 
