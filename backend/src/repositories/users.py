@@ -1,7 +1,7 @@
 from pydantic import EmailStr
 
 from src.core.db.dependencies import SessionDep
-from src.core.repository import BaseRepository
+from core.base.repository import BaseRepository
 from src.models.users import User
 
 from sqlalchemy import select

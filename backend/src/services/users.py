@@ -5,7 +5,7 @@ from fastapi import Depends
 from sqlalchemy.exc import IntegrityError
 
 from src.core.error import ConflictError, NotFoundError, AccessError
-from src.core.service import BaseService
+from core.base.service import BaseService
 from src.core.auth.security import get_password_hash, create_token, verify_password
 from src.models.users import User
 from src.repositories.users import UserRepository, get_user_repository
