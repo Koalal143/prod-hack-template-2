@@ -1,6 +1,7 @@
 from datetime import timedelta
 from typing import Tuple
 
+from fastapi import Depends
 from sqlalchemy.exc import IntegrityError
 
 from src.core.service import BaseService
@@ -11,7 +12,7 @@ from src.errors.users import (
     UserPasswordIsIncorrectError,
 )
 from src.models.users import User
-from src.repositories.users import UserRepository
+from src.repositories.users import UserRepository, get_user_repository
 from src.schemas.users import UserCreateSchema, UserLoginSchema
 
 
@@ -52,3 +53,9 @@ class UserService(BaseService[UserRepository]):
 
     async def refresh_token(self):
         pass
+
+
+async def get_user_service(
+    user_repository: UserRepository = Depends(get_user_repository),
+) -> UserService:
+    return UserService(user_repository)

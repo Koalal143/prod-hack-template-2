@@ -1,16 +1,15 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 
-from core.auth.dependencies import get_current_user
-from dependencies.users import get_user_service
-from errors.users import (
+from src.core.auth.dependencies import get_current_user
+from src.errors.users import (
     UserWithEmailAlreadyExistsError,
     UserNotFoundError,
     UserPasswordIsIncorrectError,
 )
 from src.models.users import User
 from src.schemas.tokens import TokenReadSchema
-from src.services.users import UserService
+from src.services.users import UserService, get_user_service
 from src.schemas.users import (
     UserCreateSchema,
     UserRegisterReadSchema,
@@ -63,7 +62,3 @@ async def login(
 @user_rt.get("/profile", tags=["Пользователи"], response_model=UserReadSchema)
 async def profile(user: User = Depends(get_current_user)):
     return user
-
-
-#
-#
