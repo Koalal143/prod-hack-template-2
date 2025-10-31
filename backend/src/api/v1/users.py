@@ -13,10 +13,11 @@ from src.schemas.users import (
     UserReadSchema,
 )
 
-user_rt = APIRouter(prefix="/users")
+
+router = APIRouter(prefix="/users")
 
 
-@user_rt.post(
+@router.post(
     "/auth/register", tags=["Пользователи"], response_model=UserRegisterReadSchema
 )
 async def register(
@@ -34,7 +35,7 @@ async def register(
     return user
 
 
-@user_rt.post("/auth/login", tags=["Пользователи"], response_model=TokenReadSchema)
+@router.post("/auth/login", tags=["Пользователи"], response_model=TokenReadSchema)
 async def login(
     user_login: UserLoginSchema, user_service: UserService = Depends(get_user_service)
 ):
@@ -55,6 +56,6 @@ async def login(
 # async def refresh_token():
 #     pass
 #
-@user_rt.get("/profile", tags=["Пользователи"], response_model=UserReadSchema)
+@router.get("/profile", tags=["Пользователи"], response_model=UserReadSchema)
 async def profile(user: User = Depends(get_current_user)):
     return user

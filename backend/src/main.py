@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.core.db.engine import init_db
 from src.settings import settings
-from src.api.router import api_rt
+from src.api.router import api_router
 
 
 logging.basicConfig(level=logging.INFO)
@@ -27,7 +27,7 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    app.include_router(api_rt)
+    app.include_router(api_router)
 
     @app.middleware("http")
     async def add_process_time_header(request: Request, call_next):
