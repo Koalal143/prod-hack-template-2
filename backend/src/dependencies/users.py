@@ -3,7 +3,7 @@ from http.client import HTTPException
 from fastapi import Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-from src.core.auth.security import verify_token
+from src.core.security import verify_token
 from src.repositories.users import get_user_repository
 from src.models.users import User
 from src.repositories.users import UserRepository

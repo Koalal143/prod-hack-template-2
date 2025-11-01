@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 
-from src.core.auth.dependencies import get_current_user
+from src.dependencies.users import get_current_user
 from src.core.error import NotFoundError, AccessError, ConflictError
 from src.models.users import User
 from src.schemas.tokens import TokenReadSchema
