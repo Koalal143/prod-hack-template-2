@@ -1,5 +1,5 @@
 ## Запуск
 ```bush
-cd backend/src
-uvicorn main:app --reload
+cd backend
+uvicorn src.main:app --reload
 ```
