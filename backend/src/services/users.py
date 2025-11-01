@@ -34,6 +34,10 @@ class UserService(BaseService[UserRepository]):
         return user, token
 
     async def login(self, user_login: UserLoginSchema) -> str:
+        """
+        Получение токена по паролю и почте
+        """
+
         user = await self.repository.get_by_email(user_login.email)
         if user is None:
             raise NotFoundError

@@ -1,0 +1,61 @@
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - team_sync_postgres_data:/var/lib/postgresql/data/
+    networks:
+      - main
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  api:
+    build: backend/
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - main
+
+#  frontend: TODO: ФРОНТЕНДЕРЫ ОТРЕДАКТИРУЙТЕ
+#    build: frontend/
+#    ports:
+#      - "5173:5173"
+#    environment:
+#      - NODE_ENV=production
+#      - REACT_APP_API_URL=/api/
+#    depends_on:
+#      - api
+#    networks:
+#      main:
+#    restart: unless-stopped
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      #- frontend
+      - api
+    networks:
+      - main
+
+volumes:
+  team_sync_postgres_data:
+
+networks:
+  main:
+    driver: bridge
