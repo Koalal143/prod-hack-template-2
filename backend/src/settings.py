@@ -9,11 +9,12 @@ load_dotenv()
 
 
 class Settings(BaseSettings):
+    HOST_NAME: str = "localhost"
     SECRET_KEY: str = Field(default_factory=lambda: secrets.token_urlsafe(32))
+
     POSTGRES_USER: str
     POSTGRES_HOST: str
     POSTGRES_DB: str
-    HOST_NAME: str = "localhost"
     POSTGRES_PASSWORD: str
 
     @property
