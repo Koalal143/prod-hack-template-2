@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
+from fastapi_cache.decorator import cache
 
 from src.dependencies.users import get_current_user
 from src.core.error import NotFoundError, AccessError, ConflictError
@@ -51,11 +52,8 @@ async def login(
     return TokenReadSchema(access_token=token)
 
 
-#
-# @user_rt.post("/auth/refresh", tags=["Пользователи"])
-# async def refresh_token():
-#     pass
-#
+
 @router.get("/profile", tags=["Пользователи"], response_model=UserReadSchema)
+@cache(expire=60) # просто пример (конкретно тут это НЕ будет работать из-за зависимости)
 async def profile(user: User = Depends(get_current_user)):
     return user

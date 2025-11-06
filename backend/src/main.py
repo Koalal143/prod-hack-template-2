@@ -5,6 +5,7 @@ import time
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.core.cache.engine import connect_to_redis
 from src.core.db.engine import init_db
 from src.settings import settings
 from src.api.router import api_router
@@ -14,8 +15,9 @@ logging.basicConfig(level=logging.INFO)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_: FastAPI):
     await init_db()  # добавьте alembic пж, пока эта затычка
+    await connect_to_redis()
     yield
     # что-то после
 
