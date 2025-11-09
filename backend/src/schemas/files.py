@@ -5,9 +5,9 @@ class FileUploadSchema(BaseModel):
     filename: str
 
 
-class FileDownloadSchema(BaseModel):
-    key: str
-
-
 class FileUrlSchema(BaseModel):
     url: HttpUrl
+
+
+class FileUploadUrlSchema(FileUrlSchema):
+    key: str
