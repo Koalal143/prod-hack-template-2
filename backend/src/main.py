@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.core.s3.engine import init_s3
 from src.api.router import api_router
 from src.core.cache.engine import connect_to_redis
 from src.settings import settings
@@ -16,6 +17,7 @@ logging.basicConfig(level=logging.INFO)
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None, None]:
     await connect_to_redis()
+    await init_s3()
     yield
 
 
