@@ -28,5 +28,5 @@ class FileService:
         return await self._get_presigned_url("get_object", key)
 
 
-async def get_files_service(s3_client: AioBaseClient = Depends(get_s3_client)):
+async def get_file_service(s3_client: AioBaseClient = Depends(get_s3_client)):
     return FileService(s3_client)
