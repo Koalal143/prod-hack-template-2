@@ -17,6 +17,7 @@ dependencies = [
     "alembic>=1.17.1",
     "redis>=7.0.1",
     "fastapi-cache2>=0.2.2",
+    "aiobotocore>=2.25.1",
 ]
 
 [dependency-groups]

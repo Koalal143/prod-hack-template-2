@@ -24,6 +24,18 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     POSTGRES_PASSWORD: str
 
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_PASSWORD: str
+
+    MINIO_ROOT_USER: str
+    MINIO_ROOT_PASSWORD: str
+    MINIO_HOST: str
+
+    @property
+    def MINIO_ENDPOINT(self) -> str:
+        return f"{self.MINIO_HOST}:9000"
+
     @property
     def DATABASE_URL(self) -> str:
         return str(
@@ -36,15 +48,6 @@ class Settings(BaseSettings):
                 path=f"{self.POSTGRES_DB}",
             )
         )
-
-    REDIS_HOST: str = "localhost"
-    REDIS_PORT: int = 6379
-    REDIS_PASSWORD: str
-
-    MINIO_ROOT_USER: str
-    MINIO_ROOT_PASSWORD: str
-    MINIO_HOST: str
-
 
 
 settings = Settings()
