@@ -1,12 +1,11 @@
-import os
 from aiobotocore.session import get_session
-from botocore.client import ClientCreator
+from aiobotocore.client import AioBaseClient
 
 from src.settings import settings
 
 session = get_session()
 
-async def get_s3_client() -> ClientCreator:
+async def get_s3_client() -> AioBaseClient:
     return session.create_client(
         "s3",
         endpoint_url=settings.MINIO_ENDPOINT,
