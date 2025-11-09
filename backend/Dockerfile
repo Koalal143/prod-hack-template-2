@@ -1,19 +1,38 @@
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
+
+ARG MODE=prod
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
     UV_PYTHON_DOWNLOADS=0 \
     PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
+    PYTHONDONTWRITEBYTECODE=1 \
+    MODE=$MODE
 
 
 WORKDIR /app
 RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --locked --no-install-project --no-dev
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    if [ "$MODE" = "dev" ]; then \
+          uv sync --locked --no-install-project --group dev; \
+    elif [ "$MODE" = "test" ]; then \
+        uv sync --locked --no-install-project --group test --no-dev; \
+    elif [ "$MODE" = "prod" ]; then \
+        uv sync --locked --no-install-project --no-dev; \
+    else \
+        echo "Unknown MODE=$MODE" >&2; exit 1; \
+    fi
 COPY . /app
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --locked --no-dev
+    if [ "$MODE" = "dev" ]; then \
+        uv sync --frozen --group dev; \
+    elif [ "$MODE" = "test" ]; then \
+        uv sync --frozen --group test --no-dev; \
+    elif [ "$MODE" = "prod" ]; then \
+        uv sync --frozen --no-dev; \
+    else \
+        echo "Unknown MODE=$MODE" >&2; exit 1; \
+    fi  
 
 
 FROM python:3.12-slim-bookworm
