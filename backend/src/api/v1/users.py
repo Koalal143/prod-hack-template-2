@@ -57,3 +57,9 @@ async def login(
 @cache(expire=60) # просто пример (конкретно тут это НЕ будет работать из-за зависимости)
 async def profile(user: User = Depends(get_current_user)):
     return user
+
+
+@router.get("/example")
+@cache(expire=60)
+async def example():
+    return "s"
