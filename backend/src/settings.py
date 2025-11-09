@@ -22,10 +22,6 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     POSTGRES_PASSWORD: str
 
-    REDIS_HOST: str = "localhost"
-    REDIS_PORT: int = 6379
-    REDIS_PASSWORD: str
-
     @property
     def DATABASE_URL(self) -> str:
         return str(
@@ -38,6 +34,11 @@ class Settings(BaseSettings):
                 path=f"{self.POSTGRES_DB}",
             )
         )
+
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_PASSWORD: str
+
 
 
 settings = Settings()
