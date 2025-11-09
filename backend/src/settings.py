@@ -1,4 +1,5 @@
 import secrets
+from typing import Literal
 
 from pydantic import PostgresDsn, Field
 from dotenv import load_dotenv
@@ -16,6 +17,7 @@ class Settings(BaseSettings):
 
     HOST_NAME: str = "localhost"
     SECRET_KEY: str = Field(default_factory=lambda: secrets.token_urlsafe(32))
+    MODE: Literal["prod", "dev", "test"] = "prod"
 
     POSTGRES_USER: str
     POSTGRES_HOST: str
