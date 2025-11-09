@@ -2,13 +2,18 @@ import secrets
 
 from pydantic import PostgresDsn, Field
 from dotenv import load_dotenv
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 load_dotenv()
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file="../../.env",
+        case_sensitive=True,
+    )
+
     HOST_NAME: str = "localhost"
     SECRET_KEY: str = Field(default_factory=lambda: secrets.token_urlsafe(32))
 
@@ -33,10 +38,6 @@ class Settings(BaseSettings):
                 path=f"{self.POSTGRES_DB}",
             )
         )
-
-    class Config:
-        env_file = "../../.env"
-        case_sensitive = True
 
 
 settings = Settings()
