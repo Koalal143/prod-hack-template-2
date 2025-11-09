@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from fastapi import Depends
+from fastapi_cache.decorator import cache
 
 from src.schemas.files import FileUploadSchema, FileUrlSchema, FileUploadUrlSchema
 from src.services.files import get_file_service
@@ -14,6 +15,7 @@ router = APIRouter(prefix="/files")
     response_model=FileUploadUrlSchema,
     tags=["Файлы"]
 )
+@cache(expire=30)
 async def get_upload_url(
     file_metadata: FileUploadSchema,
     file_service: FileService = Depends(get_file_service),
@@ -26,6 +28,7 @@ async def get_upload_url(
     response_model=FileUrlSchema,
     tags=["Файлы"]
 )
+@cache(expire=30)
 async def get_download_url(
     key: str,
     file_service: FileService = Depends(get_file_service),

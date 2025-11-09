@@ -5,6 +5,7 @@ from src.settings import settings
 
 session = get_session()
 
+
 async def create_s3_client() -> AioBaseClient:
     return session.create_client(
         "s3",
