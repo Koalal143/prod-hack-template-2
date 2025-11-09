@@ -16,10 +16,9 @@ async def create_s3_client() -> AioBaseClient:
 
 
 async def init_s3():
-    client = await create_s3_client()
-    try:
-        buckets = await client.list_buckets()
-        if settings.MINIO_BUCKET not in {b["Name"] for b in buckets["Buckets"]}:
+    async with (await create_s3_client()) as client:
+        response = await client.list_buckets()
+        bucket_names = {b["Name"] for b in response.get("Buckets", [])}
+
+        if settings.MINIO_BUCKET not in bucket_names:
             await client.create_bucket(Bucket=settings.MINIO_BUCKET)
-    finally:
-        await client.close()

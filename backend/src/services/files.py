@@ -3,7 +3,7 @@ import uuid
 from aiobotocore.client import AioBaseClient
 from fastapi import Depends
 
-from core.s3.dependencies import get_s3_client
+from src.core.s3.dependencies import get_s3_client
 from src.settings import settings
 
 class FileService:
@@ -11,7 +11,7 @@ class FileService:
         self.s3_client = s3_client
 
     async def _get_presigned_url(self, operation_type: str, key: str) -> str:
-        return await self.s3_client.generate_presigned_url(
+        url = await self.s3_client.generate_presigned_url(
             operation_type,
             Params={
                 "Bucket": settings.MINIO_BUCKET,
@@ -19,6 +19,8 @@ class FileService:
             },
             ExpiresIn=3600,
         )
+
+        return url.replace(settings.MINIO_HOST, settings.HOST_NAME, 1)
 
     async def get_upload_url(self, filename):
         key = f"{str(uuid.uuid4())}_{filename}"

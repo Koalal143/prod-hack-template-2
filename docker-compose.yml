@@ -28,9 +28,12 @@ services:
       REDIS_PORT: 6379
       REDIS_PASSWORD: ${REDIS_PASSWORD}
 
-      MINIO_ROOT_USER: ${AWS_ACCESS_KEY_ID}
-      MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY}
-      MINIO_HOST: s3_storage
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_HOST: s3-storage
+      MINIO_BUCKET: ${MINIO_BUCKET}
+
+      HOST_NAME: ${HOST_NAME}
 
     depends_on:
       db:
@@ -67,15 +70,15 @@ services:
     command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes
     volumes:
       - redis_data:/data
+    networks:
+      - main
     environment:
-      REDIS_PASSWORD: ${REDIS_PASSWORD
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
 
-  s3_storage:
+  s3-storage:
     image: minio/minio
     ports:
       - "9000:9000"
-    env_file:
-      - .env
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
@@ -89,6 +92,8 @@ services:
       retries: 5
       start_period: 5s
     restart: unless-stopped
+    networks:
+      - main
 
 
 volumes:

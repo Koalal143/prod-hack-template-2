@@ -31,10 +31,11 @@ class Settings(BaseSettings):
     MINIO_ROOT_USER: str
     MINIO_ROOT_PASSWORD: str
     MINIO_HOST: str
+    MINIO_BUCKET: str
 
     @property
     def MINIO_ENDPOINT(self) -> str:
-        return f"{self.MINIO_HOST}:9000"
+        return f"http://{self.MINIO_HOST}:9000"
 
     @property
     def DATABASE_URL(self) -> str:
