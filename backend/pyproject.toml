@@ -18,3 +18,49 @@ dependencies = [
     "redis>=7.0.1",
     "fastapi-cache2>=0.2.2",
 ]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.4",
+]
+
+[tool.ruff]
+target-version = "py311"
+exclude = ["venv", ".venv", ".env", "src/typings/external"]
+
+line-length = 120
+lint.select = ["ALL"]
+lint.ignore = [
+    # modules
+    "C90", # mccabe complexity
+    "DJ",  # django
+    "T10", # debugger
+
+    # specific rules
+    "COM",    # flake8-commas
+    "S104",   # binging to all interfaces
+    "D100",   # ignore missing docs
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D106",
+    "D107",
+    "D200",   # ignore one-line docstring
+    "D203",
+    "D212",
+    "D213",
+    "D400",
+    "D415",
+    "TRY003", # external messages in exceptions are too verbose
+    "TD002",
+    "TD003",
+    "FIX002", # too verbose descriptions of todos
+    "S101",   # prohibited assert statement
+    "ARG001", # unused function argument
+    "ANN401", # disallow Any type
+    "RUF001", # string contrains ambigious o
+    "PLR0913", # too many arguments in function signature
+]
+format.skip-magic-trailing-comma = false
