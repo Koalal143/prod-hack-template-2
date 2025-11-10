@@ -1,7 +1,7 @@
 import re
 from typing import Annotated
 
-from pydantic import BaseModel, EmailStr, AfterValidator
+from pydantic import BaseModel, EmailStr, AfterValidator, ConfigDict
 
 
 def is_correct_password(value: str) -> str:
@@ -34,12 +34,12 @@ class UserBaseSchema(BaseModel):
 
 class UserCreateSchema(UserBaseSchema):
     password: PasswordStr
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
 
 
 class UserRegisterReadSchema(UserBaseSchema):
+    id: int
     access_token: str
 
 
