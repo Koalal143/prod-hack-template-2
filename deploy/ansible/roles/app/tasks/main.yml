@@ -58,8 +58,6 @@
 - name: Pull backend image via docker CLI
   ansible.builtin.shell: |
     docker pull --platform linux/amd64 {{ lookup('env','CI_REGISTRY_IMAGE') }}/backend:{{ lookup('env','CI_COMMIT_SHA') }}
-  args:
-    warn: false
 
 - name: Create and start services
   community.docker.docker_compose_v2:
