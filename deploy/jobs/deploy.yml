@@ -9,8 +9,8 @@
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
     - ssh-agent sh -c "ssh-add ~/.ssh/id_rsa"
     - ssh-keyscan -H "$SSH_HOST"
-    - echo "$ANSIBLE_HOSTS" > $CI_PROJECT_DIR/deploy/ansible/inventory/hosts.ini
-    - echo "$ANSIBLE_SECRETS" > $CI_PROJECT_DIR/deploy/ansible/secrets.yml
-    - echo "$ENV_FILE" > $CI_PROJECT_DIR/.env
+    - cat "$ANSIBLE_HOSTS" > $CI_PROJECT_DIR/deploy/ansible/inventory/hosts.ini
+    - cat "$ANSIBLE_SECRETS" > $CI_PROJECT_DIR/deploy/ansible/secrets.yml
+    - cat "$ENV_FILE" > $CI_PROJECT_DIR/.env
   script:
     - ansible-playbook -i inventory/hosts.ini $CI_PROJECT_DIR/deploy/ansible/playbook.yml
