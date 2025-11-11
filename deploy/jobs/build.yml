@@ -14,11 +14,11 @@
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker buildx create --use --name mybuilder || docker buildx use mybuilder
   script:
-    - docker buildx build \
-        --file backend/Dockerfile \
-        --build-arg MODE=prod \
-        --cache-to=type=registry,ref=$IMAGE_NAME,mode=max \
-        --cache-from=type=registry,ref=$IMAGE_NAME \
-        --push \
-        --tag $IMAGE_NAME \
+    - docker buildx build 
+        --file backend/Dockerfile
+        --build-arg MODE=prod
+        --cache-to=type=registry,ref=$IMAGE_NAME,mode=max
+        --cache-from=type=registry,ref=$IMAGE_NAME
+        --push
+        --tag $IMAGE_NAME
         backend/
