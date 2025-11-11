@@ -3,7 +3,7 @@ include:
 
 services:
   api:
-    image: ${CI_REGISTRY_IMAGE}/backend:latest
+    image: ${CI_REGISTRY_IMAGE}/backend:${CI_COMMIT_SHA}
     env_file: ../../.env
     depends_on:
       s3-storage:

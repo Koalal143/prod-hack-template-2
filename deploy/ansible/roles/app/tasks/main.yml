@@ -65,3 +65,4 @@
       - "{{ app_dir }}/.env"
   environment:
     CI_REGISTRY_IMAGE: "{{ lookup('env', 'CI_REGISTRY_IMAGE') }}"
+    CI_COMMIT_SHA: "{{ lookup('env', 'CI_COMMIT_SHA') }}"

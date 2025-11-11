@@ -6,7 +6,7 @@ include:
 stages:
 - test
 - secret-detection
-# - build
+- build
 - deploy
 
 .global-variables:
@@ -21,10 +21,10 @@ variables:
 secret_detection:
   stage: secret-detection
 
-# build:
-#   stage: build
-#   extends:
-#     - .build
+build:
+  stage: build
+  extends:
+    - .build
 
 deploy:
   stage: deploy
