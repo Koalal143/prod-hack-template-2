@@ -16,8 +16,8 @@
   script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$REGISTRY_USER\",\"password\":\"$REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor \
-      --context "${CONTEXT}" \
-      --dockerfile "${DOCKERFILE_PATH}" \
-      --destination "${IMAGE_NAME}" \
+    - /kaniko/executor
+      --context "${CONTEXT}"
+      --dockerfile "${DOCKERFILE_PATH}"
+      --destination "${IMAGE_NAME}"
       --cache=True
