@@ -54,6 +54,13 @@
     files:
       - "{{ app_dir }}/docker-compose.yml"
 
+
+- name: Pull backend image with platform
+  community.docker.docker_image:
+    name: "{{ lookup('env','CI_REGISTRY_IMAGE') }}/backend:{{ lookup('env','CI_COMMIT_SHA') }}"
+    source: pull
+    platform: linux/amd64
+
 - name: Create and start services
   community.docker.docker_compose_v2:
     project_src: "{{ app_dir }}/deploy/docker"
