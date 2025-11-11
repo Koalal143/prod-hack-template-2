@@ -1,7 +1,7 @@
 include:
   - template: Security/Secret-Detection.gitlab-ci.yml
-  - local: /jobs/build.yml
-  - local: /jobs/deploy.yml
+  - local: /deploy/jobs/build.yml
+  - local: /deploy/jobs/deploy.yml
 
 stages:
 - test
