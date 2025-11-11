@@ -18,6 +18,13 @@
     state: present
   become: true
 
+- name: Ensure rsync is installed on localhost
+  package:
+    name: rsync
+    state: present
+  become: true
+  delegate_to: localhost
+
 - name: Sync all sources except artifacts
   synchronize:
     src: "{{ playbook_dir }}/../.."
