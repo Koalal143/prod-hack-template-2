@@ -1,0 +1,24 @@
+include:
+  - ./docker-compose.base.yml
+
+services:
+  api:
+    image: ${CI_REGISTRY_IMAGE}/backend:latest
+    env_file: ../../.env
+    depends_on:
+      s3-storage:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    networks:
+      - main
+  
+  nginx:
+    build: ../../nginx
+    ports:
+      - "80:80"
+    depends_on:
+      #- frontend
+      - api
+    networks:
+      - main

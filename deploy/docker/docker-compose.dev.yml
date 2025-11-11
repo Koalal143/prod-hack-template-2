@@ -1,0 +1,62 @@
+include:
+  - ./docker-compose.base.yml
+
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/18/data/
+    networks:
+      - main
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  api:
+    build:
+      context: ../../backend
+      args:
+       - MODE=dev
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+      REDIS_HOST: cache
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_HOST: s3-storage
+      MINIO_BUCKET: ${MINIO_BUCKET}
+
+      HOST_NAME: ${HOST_NAME}
+      MODE: dev
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - main
+  
+  nginx:
+    build: ../../nginx
+    ports:
+      - "80:80"
+    depends_on:
+      #- frontend
+      - api
+    networks:
+      - main
+  
+volumes:
+  postgres_data:
