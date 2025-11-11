@@ -1,5 +1,5 @@
 ---
-deploy:
+.deploy:
   image: python:3.12
   stage: deploy
   before_script:
