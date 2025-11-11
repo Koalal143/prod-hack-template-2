@@ -7,7 +7,7 @@
   variables:
     DOCKERFILE_PATH: backend/Dockerfile
     DOCKER_CONFIG: /kaniko/.docker
-    CONTEXT: $CI_PROJECT_DIR
+    CONTEXT: $CI_PROJECT_DIR/backend
     IMAGE_TAG: $CI_COMMIT_SHA
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend:$IMAGE_TAG
     REGISTRY_USER: $CI_REGISTRY_USER
