@@ -5,7 +5,7 @@
     entrypoint: [""]
   stage: build
   variables:
-    DOCKERFILE_PATH: backend/Dockerfile
+    DOCKERFILE_PATH: Dockerfile
     DOCKER_CONFIG: /kaniko/.docker
     CONTEXT: $CI_PROJECT_DIR/backend
     IMAGE_TAG: $CI_COMMIT_SHA
