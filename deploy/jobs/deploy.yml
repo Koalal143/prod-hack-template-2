@@ -14,4 +14,4 @@
     - cat $ENV_FILE > $CI_PROJECT_DIR/.env
     - ansible-galaxy install -r $CI_PROJECT_DIR/deploy/ansible/requirements.yml
   script:
-    - ansible-playbook -i inventory/hosts.ini $CI_PROJECT_DIR/deploy/ansible/playbook.yml
+    - ansible-playbook -i $CI_PROJECT_DIR/deploy/ansible/inventory/hosts.ini $CI_PROJECT_DIR/deploy/ansible/playbook.yml
