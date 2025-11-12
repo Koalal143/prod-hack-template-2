@@ -27,9 +27,7 @@ class UserService(BaseService[UserRepository]):
         except IntegrityError:
             raise ConflictError
 
-        token = create_token(
-            data={"sub": str(user.email)}, expires_delta=timedelta(hours=7)
-        )
+        token = create_token(data={"sub": str(user.email)}, expires_delta=timedelta(hours=7))
         return user, token
 
     async def login(self, user_login: UserLoginSchema) -> str:

@@ -16,7 +16,7 @@ router = APIRouter(prefix="/files")
     tags=["Файлы"],
     responses={
         200: {"description": "Успешное получение URL-адреса для загрузки файла в S3-хранилище."},
-    }
+    },
 )
 @cache(expire=30)
 async def get_upload_url(
@@ -32,7 +32,7 @@ async def get_upload_url(
     tags=["Файлы"],
     responses={
         200: {"description": "Успешное получение URL-адреса для скачивания файла из S3-хранилища."},
-    }
+    },
 )
 @cache(expire=30)
 async def get_download_url(

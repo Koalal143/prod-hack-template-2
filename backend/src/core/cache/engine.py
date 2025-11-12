@@ -12,7 +12,4 @@ async def connect_to_redis():
         password=settings.REDIS_PASSWORD,
     )
 
-    FastAPICache.init(
-        RedisBackend(redis),
-        prefix="cache"
-    )
+    FastAPICache.init(RedisBackend(redis), prefix="cache")
