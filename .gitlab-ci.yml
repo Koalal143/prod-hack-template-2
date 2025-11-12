@@ -24,4 +24,4 @@ deploy:
   stage: deploy
   extends:
     - .global-variables
-    - .deploy
+    - .deploy_legacy
