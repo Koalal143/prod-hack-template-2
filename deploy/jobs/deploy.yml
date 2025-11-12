@@ -17,15 +17,15 @@
     - ansible-playbook -i $CI_PROJECT_DIR/deploy/ansible/inventory/hosts.ini $CI_PROJECT_DIR/deploy/ansible/playbook.yml
 
 .deploy_legacy:
-  image: kroniak/ssh-client:3.19
+  image: python:3.12
   stage: deploy
   before_script:
+    - apt-get update -y && apt-get install -y rsync openssh-client
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config && chmod 600 ~/.ssh/config
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
     - ssh-agent sh -c "ssh-add ~/.ssh/id_rsa"
     - ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
-    - apt-get update -y && apt-get install -y rsync
   script:
     - cp "$ANSIBLE_SECRETS" deploy/ansible/secrets.yml
     - cp "$ENV_FILE" .env
