@@ -1,0 +1,19 @@
+---
+.lint_ruff:
+  stage: lint
+  image: registry.gitlab.com/pipeline-components/ruff:latest
+  script:
+    - cd backend
+    - ruff check --output-format=gitlab .
+  only:
+    - main
+
+
+.format_ruff:
+  stage: lint
+  image: registry.gitlab.com/pipeline-components/ruff:latest
+  script:
+    - cd backend
+    - ruff format --check --verbose .
+  only:
+    - main

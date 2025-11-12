@@ -1,9 +1,11 @@
 include:
   - template: Security/Secret-Detection.gitlab-ci.yml
   - local: /deploy/jobs/deploy.yml
+  - local: /deploy/jobs/lint.yml
 
 stages:
 - secret-detection
+- lint
 - test
 - deploy
 
@@ -18,6 +20,13 @@ variables:
 
 secret_detection:
   stage: secret-detection
+
+
+lint:
+  stage: lint
+  extends:
+    - .lint_ruff
+    - .format_ruff
 
 
 deploy:
