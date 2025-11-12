@@ -1,0 +1,36 @@
+include:
+  - ./docker-compose.base.yml
+
+services:
+  api:
+    build:
+      context: ../../backend
+      args:
+        - MODE=prod
+    env_file: ../../.env
+    depends_on:
+      s3-storage:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    networks:
+      - main
+    ports:
+     - "8000:8000"
+  
+  nginx:
+    image: nginx:stable-alpine
+    volumes:
+      - '../../nginx/nginx.conf:/etc/nginx/nginx.conf'
+    ports:
+      - "80:80"
+    depends_on:
+      #- frontend
+      - api
+    networks:
+      - main
+    restart: always
+
+networks:
+  main:
+    driver: bridge

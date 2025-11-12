@@ -1,14 +1,14 @@
 import logging
-import time
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.core.s3.engine import init_s3
+from src.api.middlewares import ProcessTimeHeaderMiddleware
 from src.api.router import api_router
 from src.core.cache.engine import connect_to_redis
+from src.core.s3.engine import init_s3
 from src.settings import settings
 
 logging.basicConfig(level=logging.INFO)
@@ -31,13 +31,7 @@ def create_app() -> FastAPI:
 
     app.include_router(api_router)
 
-    @app.middleware("http")
-    async def add_process_time_header(request: Request, call_next):
-        start_time = time.perf_counter()
-        response = await call_next(request)
-        process_time = time.perf_counter() - start_time
-        response.headers["X-Process-Time"] = str(round(process_time, 4))
-        return response
+    app.add_middleware(ProcessTimeHeaderMiddleware)
 
     app.add_middleware(
         CORSMiddleware,
@@ -45,6 +39,7 @@ def create_app() -> FastAPI:
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
+        expose_headers=["X-Process-Time"],
     )
 
     return app
