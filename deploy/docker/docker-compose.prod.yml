@@ -3,7 +3,10 @@ include:
 
 services:
   api:
-    image: ${CI_REGISTRY_IMAGE}/backend:${CI_COMMIT_SHA}
+    build:
+      context: ../../backend/Dockerfile
+      args:
+        - MODE=prod
     env_file: ../../.env
     depends_on:
       s3-storage:

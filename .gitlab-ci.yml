@@ -1,12 +1,10 @@
 include:
   - template: Security/Secret-Detection.gitlab-ci.yml
-  - local: /deploy/jobs/build.yml
   - local: /deploy/jobs/deploy.yml
 
 stages:
-- test
 - secret-detection
-- build
+- test
 - deploy
 
 .global-variables:
@@ -21,10 +19,6 @@ variables:
 secret_detection:
   stage: secret-detection
 
-build:
-  stage: build
-  extends:
-    - .build
 
 deploy:
   stage: deploy
