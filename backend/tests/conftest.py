@@ -1,12 +1,22 @@
 import asyncio
-from typing import AsyncGenerator
+from contextlib import asynccontextmanager
+from typing import AsyncGenerator, AsyncIterator
 
 import pytest
 import pytest_asyncio
 from asgi_lifespan import LifespanManager
 from httpx import AsyncClient, ASGITransport
+from fastapi import FastAPI
 
 from src.main import app
+
+
+@asynccontextmanager
+async def no_lifespan(_: FastAPI) -> AsyncIterator[None]:
+    yield
+
+
+app.router.lifespan_context = no_lifespan
 
 
 @pytest.fixture(scope="session")

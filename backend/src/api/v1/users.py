@@ -19,7 +19,13 @@ router = APIRouter(prefix="/users")
 
 
 @router.post(
-    "/auth/register", tags=["Пользователи"], response_model=UserRegisterReadSchema
+    "/auth/register",
+    tags=["Пользователи"],
+    response_model=UserRegisterReadSchema,
+    responses={
+        200: {"description": "Успешная регистрация и возврат пользователя с токеном."},
+        409: {"description": "Пользователь с такой электронной почтой уже зарегистрирован."},
+    }
 )
 async def register(
     user_create: UserCreateSchema, user_service: UserService = Depends(get_user_service)
@@ -29,14 +35,23 @@ async def register(
         user.access_token = token
     except ConflictError:
         raise HTTPException(
-            status_code=400,
+            status_code=409,
             detail="Пользователь с такой электронной почтой уже зарегистрирован.",
         )
 
     return user
 
 
-@router.post("/auth/login", tags=["Пользователи"], response_model=TokenReadSchema)
+@router.post(
+    "/auth/login",
+    tags=["Пользователи"],
+    response_model=TokenReadSchema,
+    responses={
+        200: {"description": "Успешный вход и возврат токена доступа."},
+        404: {"description": "Пользователь с таким email не найден."},
+        403: {"description": "Неверный пароль."},
+    }
+)
 async def login(
     user_login: UserLoginSchema, user_service: UserService = Depends(get_user_service)
 ):
@@ -53,7 +68,14 @@ async def login(
 
 
 
-@router.get("/profile", tags=["Пользователи"], response_model=UserReadSchema)
-@cache(expire=60) # просто пример (конкретно тут это НЕ будет работать из-за зависимости)
+@router.get(
+    "/profile",
+    tags=["Пользователи"],
+    response_model=UserReadSchema,
+    responses={
+        200: {"description": "Успешный возврат данных текущего пользователя."},
+        401: {"description": "Пользователь не авторизован (не предоставлен или недействителен токен)."},
+    }
+)
 async def profile(user: User = Depends(get_current_user)):
     return user

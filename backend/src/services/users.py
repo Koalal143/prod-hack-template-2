@@ -15,8 +15,7 @@ from src.schemas.users import UserCreateSchema, UserLoginSchema
 class UserService(BaseService[UserRepository]):
     async def register(self, user_create: UserCreateSchema) -> Tuple[User, str]:
         """
-        регистрирует нового пользователя и возвращает его вместе с access токеном
-        :return:
+        Регистрирует нового пользователя и возвращает его вместе с access токеном
         """
 
         user_create_dict = user_create.model_dump()
@@ -47,12 +46,6 @@ class UserService(BaseService[UserRepository]):
 
         token = create_token(data={"sub": user.email}, expires_delta=timedelta(hours=7))
         return token
-
-    async def logout(self):
-        pass
-
-    async def refresh_token(self):
-        pass
 
 
 async def get_user_service(
