@@ -11,3 +11,4 @@ class User(Base):
     second_name: Mapped[str]
     email: Mapped[str] = mapped_column(unique=True)
     password_hash: Mapped[str]
+    avatar_file_key: Mapped[str | None]

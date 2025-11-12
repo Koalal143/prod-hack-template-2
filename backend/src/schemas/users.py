@@ -30,6 +30,7 @@ class UserBaseSchema(BaseModel):
     first_name: str
     second_name: str
     email: EmailStr
+    avatar_file_key: str | None = None
 
 
 class UserCreateSchema(UserBaseSchema):
