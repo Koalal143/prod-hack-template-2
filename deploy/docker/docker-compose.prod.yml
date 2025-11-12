@@ -27,3 +27,4 @@ services:
       - api
     networks:
       - main
+    restart: always
