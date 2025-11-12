@@ -21,14 +21,6 @@ variables:
 secret_detection:
   stage: secret-detection
 
-
-lint:
-  stage: lint
-  extends:
-    - .lint_ruff
-    - .format_ruff
-
-
 deploy:
   stage: deploy
   extends:
