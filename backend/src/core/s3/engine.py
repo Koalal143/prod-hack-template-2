@@ -1,5 +1,5 @@
-from aiobotocore.session import get_session
 from aiobotocore.client import AioBaseClient
+from aiobotocore.session import get_session
 
 from src.settings import settings
 
@@ -9,15 +9,15 @@ session = get_session()
 async def create_s3_client() -> AioBaseClient:
     return session.create_client(
         "s3",
-        endpoint_url=settings.MINIO_ENDPOINT,
+        endpoint_url=settings.minio_endpoint,
         aws_secret_access_key=settings.MINIO_ROOT_PASSWORD,
         aws_access_key_id=settings.MINIO_ROOT_USER,
         region_name="us-east-1",
     )
 
 
-async def init_s3():
-    async with (await create_s3_client()) as client:
+async def init_s3() -> None:
+    async with await create_s3_client() as client:
         response = await client.list_buckets()
         bucket_names = {b["Name"] for b in response.get("Buckets", [])}
 

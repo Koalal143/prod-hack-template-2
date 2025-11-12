@@ -41,14 +41,14 @@ line-length = 120
 lint.select = ["ALL"]
 lint.ignore = [
     # modules
-    "C90", # mccabe complexity
-    "DJ",  # django
-    "T10", # debugger
+    "C90",        # mccabe complexity
+    "DJ",         # django
+    "T10",        # debugger
 
     # specific rules
-    "COM",    # flake8-commas
-    "S104",   # binging to all interfaces
-    "D100",   # ignore missing docs
+    "COM",        # flake8-commas
+    "S104",       # binging to all interfaces
+    "D100",       # ignore missing docs
     "D101",
     "D102",
     "D103",
@@ -56,25 +56,31 @@ lint.ignore = [
     "D105",
     "D106",
     "D107",
-    "D200",   # ignore one-line docstring
+    "D200",       # ignore one-line docstring
     "D203",
     "D212",
     "D213",
     "D400",
     "D415",
-    "TRY003", # external messages in exceptions are too verbose
+    "TRY003",     # external messages in exceptions are too verbose
     "TD002",
     "TD003",
-    "FIX002", # too verbose descriptions of todos
-    "S101",   # prohibited assert statement
-    "ARG001", # unused function argument
-    "ANN401", # disallow Any type
-    "RUF001", # string contrains ambigious o
-    "RUF002", # other ambigious cyrillic symbols in string
-    "PLR0913", # too many arguments in function signature
+    "FIX002",     # too verbose descriptions of todos
+    "S101",       # prohibited assert statement
+    "ARG001",     # unused function argument
+    "ANN401",     # disallow Any type
+    "RUF001",     # string contrains ambigious o
+    "RUF002",     # other ambigious cyrillic symbols in string
+    "RUF003",     # yet another ambigious cyrillic symbol warning
+    "PLR0913",    # too many arguments in function signature
 ]
 format.skip-magic-trailing-comma = false
 
 [tool.ruff.lint.per-file-ignores]
 "alembic/*" = ["INP001"]
-"tests/*" = ["ANN", "INP001"]
+"tests/*" = [
+    "ANN",       # Type annotations
+    "INP001",    # Missing __init__.py
+    "S105",      # Possible hardcoded password
+    "S106",      # Possible hardcoded password assigned to argument  
+]

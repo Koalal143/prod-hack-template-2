@@ -1,10 +1,9 @@
 import secrets
 from typing import Literal
 
-from pydantic import PostgresDsn, Field
 from dotenv import load_dotenv
+from pydantic import Field, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
 
 load_dotenv()
 
@@ -34,11 +33,11 @@ class Settings(BaseSettings):
     MINIO_BUCKET: str
 
     @property
-    def MINIO_ENDPOINT(self) -> str:
+    def minio_endpoint(self) -> str:
         return f"http://{self.MINIO_HOST}:9000"
 
     @property
-    def DATABASE_URL(self) -> str:
+    def database_url(self) -> str:
         return str(
             PostgresDsn.build(
                 scheme="postgresql+asyncpg",
