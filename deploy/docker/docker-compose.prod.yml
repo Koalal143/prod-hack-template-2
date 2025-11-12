@@ -28,3 +28,7 @@ services:
     networks:
       - main
     restart: always
+
+networks:
+  main:
+    driver: bridge
