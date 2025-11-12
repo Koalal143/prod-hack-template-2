@@ -4,7 +4,7 @@ include:
 services:
   api:
     build:
-      context: ../../backend/Dockerfile
+      context: ../../backend
       args:
         - MODE=prod
     env_file: ../../.env
