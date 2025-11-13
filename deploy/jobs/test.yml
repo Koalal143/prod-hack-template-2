@@ -42,8 +42,8 @@ migrations_check:
   needs:
     - job: uv_install
       artifacts: true
-  dependencies:
-    - db_up
+    - job: db_up
+      artifacts: false
   before_script:
     - cp $TEST_ENV_FILE .env
     - cd backend
