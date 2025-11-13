@@ -1,9 +1,9 @@
 from pydantic import EmailStr
 from sqlalchemy import select
 
-from src.repositories.base import BaseRepository
 from src.core.db.dependencies import SessionDep
 from src.models.users import User
+from src.repositories.base import BaseRepository
 
 
 class UserRepository(BaseRepository[User]):

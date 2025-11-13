@@ -1,11 +1,11 @@
-from redis.asyncio import Redis
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
+from redis.asyncio import Redis
 
 from src.settings import settings
 
 
-async def connect_to_redis():
+async def connect_to_redis() -> None:
     redis = Redis(
         host=settings.REDIS_HOST,
         port=settings.REDIS_PORT,
