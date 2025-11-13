@@ -68,4 +68,4 @@ tests:
     - cd backend
     - source .venv/bin/activate
   script:
-    - pytest ./tests'
+    - pytest ./tests
