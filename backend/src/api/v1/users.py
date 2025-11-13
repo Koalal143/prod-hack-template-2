@@ -7,12 +7,7 @@ from src.core.error import AccessError, ConflictError, NotFoundError
 from src.dependencies.users import get_current_user
 from src.models.users import User
 from src.schemas.tokens import TokenReadSchema, RefreshTokenSchema
-from src.schemas.users import (
-    UserCreateSchema,
-    UserLoginSchema,
-    UserReadSchema,
-    UserRegisterSchema
-)
+from src.schemas.users import UserCreateSchema, UserLoginSchema, UserReadSchema, UserRegisterSchema
 from src.services.users import UserService, get_user_service
 
 router = APIRouter(prefix="/users")
@@ -86,9 +81,10 @@ async def profile(user: Annotated[User, Depends(get_current_user)]) -> User:
         401: {"description": "Токен не действителен"},
     },
 )
-async def refresh_token(token_data: RefreshTokenSchema, user_service: Annotated[UserService, Depends(get_user_service)]) -> TokenReadSchema:
+async def refresh_token(
+    token_data: RefreshTokenSchema, user_service: Annotated[UserService, Depends(get_user_service)]
+) -> TokenReadSchema:
     try:
         return await user_service.refresh_token(token_data.refresh_token)
     except AccessError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Токен не действителен")
-

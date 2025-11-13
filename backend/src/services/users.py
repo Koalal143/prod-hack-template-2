@@ -28,8 +28,11 @@ class UserService:
         """
         Генерация access токена
         """
-        return create_token(data={"sub": user.email},
-                            expires_delta=timedelta(seconds=settings.ACCESS_TOKEN_LIFETIME), token_type="access")
+        return create_token(
+            data={"sub": user.email},
+            expires_delta=timedelta(seconds=settings.ACCESS_TOKEN_LIFETIME),
+            token_type="access",
+        )
 
     async def _create_refresh_token(self, user: User) -> str:
         """
@@ -38,8 +41,11 @@ class UserService:
 
         token_id = str(uuid.uuid4())
 
-        token = create_token(data={"sub": user.email, "id": token_id},
-                             expires_delta=timedelta(seconds=settings.REFRESH_TOKEN_LIFETIME), token_type="refresh")
+        token = create_token(
+            data={"sub": user.email, "id": token_id},
+            expires_delta=timedelta(seconds=settings.REFRESH_TOKEN_LIFETIME),
+            token_type="refresh",
+        )
         await self.token_repository.create({"token_hash": get_string_hash(token), "id": token_id})
         return token
 
@@ -57,14 +63,10 @@ class UserService:
             raise ConflictError from None
 
         return UserRegisterSchema(
-            user=UserReadSchema.model_validate(
-                user,
-                from_attributes=True
-            ),
+            user=UserReadSchema.model_validate(user, from_attributes=True),
             tokens=TokenReadSchema(
-                refresh_token=await self._create_refresh_token(user),
-                access_token=await self._create_access_token(user)
-            )
+                refresh_token=await self._create_refresh_token(user), access_token=await self._create_access_token(user)
+            ),
         )
 
     async def login(self, user_login: UserLoginSchema) -> TokenReadSchema:
@@ -79,8 +81,7 @@ class UserService:
             raise AccessError
 
         return TokenReadSchema(
-            refresh_token=await self._create_refresh_token(user),
-            access_token=await self._create_access_token(user)
+            refresh_token=await self._create_refresh_token(user), access_token=await self._create_access_token(user)
         )
 
     async def refresh_token(self, refresh_token: str) -> TokenReadSchema:
@@ -115,9 +116,8 @@ class UserService:
         return await self.user_repository.get_by_email(payload.sub)
 
 
-
 async def get_user_service(
-        user_repository: Annotated[UserRepository, Depends(get_user_repository)],
-        token_repository: Annotated[TokenRepository, Depends(get_token_repository)]
+    user_repository: Annotated[UserRepository, Depends(get_user_repository)],
+    token_repository: Annotated[TokenRepository, Depends(get_token_repository)],
 ) -> UserService:
     return UserService(user_repository, token_repository)

@@ -1,5 +1,5 @@
 import uuid
-from datetime import timedelta, datetime, UTC
+from datetime import timedelta
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -33,7 +33,9 @@ def user_service(mock_user_repo, mock_token_repo):
 async def test_register_user(user_service, mock_user_repo, mock_token_repo):
     mock_user = User(id=1, email="test@example.com", first_name="test", second_name="test")
     mock_user_repo.create.return_value = mock_user
-    user_create = UserCreateSchema(email="test@example.com", password="passwordSDf123.", first_name="test", second_name="test")
+    user_create = UserCreateSchema(
+        email="test@example.com", password="passwordSDf123.", first_name="test", second_name="test"
+    )
 
     with patch("src.services.users.get_string_hash", return_value="hashed_password"):
         result = await user_service.register(user_create)
@@ -52,7 +54,9 @@ async def test_register_user(user_service, mock_user_repo, mock_token_repo):
 @pytest.mark.asyncio
 async def test_register_user_conflict(user_service, mock_user_repo):
     mock_user_repo.create.side_effect = ConflictError
-    user_create = UserCreateSchema(email="test@example.com", password="passwordSDf123.", first_name="test", second_name="test")
+    user_create = UserCreateSchema(
+        email="test@example.com", password="passwordSDf123.", first_name="test", second_name="test"
+    )
 
     with patch("src.services.users.get_string_hash", return_value="hashed_password"):
         with pytest.raises(ConflictError):
@@ -103,7 +107,7 @@ async def test_refresh_token_success(user_service, mock_user_repo, mock_token_re
     refresh_token = create_token(
         data={"sub": user_email, "id": token_id},
         expires_delta=timedelta(seconds=settings.REFRESH_TOKEN_LIFETIME),
-        token_type="refresh"
+        token_type="refresh",
     )
     hashed_token = get_string_hash(refresh_token)
 
@@ -135,7 +139,7 @@ async def test_refresh_token_wrong_type(user_service):
     access_token = create_token(
         data={"sub": "test@example.com"},
         expires_delta=timedelta(seconds=settings.ACCESS_TOKEN_LIFETIME),
-        token_type="access"
+        token_type="access",
     )
     with pytest.raises(AccessError):
         await user_service.refresh_token(access_token)
@@ -145,15 +149,13 @@ async def test_refresh_token_wrong_type(user_service):
 async def test_refresh_token_expired(user_service, mock_user_repo, mock_token_repo):
     user_email = "test@example.com"
     token_id = str(uuid.uuid4())
-    
+
     # Create an expired token
     expired_delta = timedelta(seconds=-1)
     refresh_token = create_token(
-        data={"sub": user_email, "id": token_id},
-        expires_delta=expired_delta,
-        token_type="refresh"
+        data={"sub": user_email, "id": token_id}, expires_delta=expired_delta, token_type="refresh"
     )
-    
+
     with pytest.raises(AccessError):
         await user_service.refresh_token(refresh_token)
 
@@ -165,7 +167,7 @@ async def test_refresh_token_not_in_db(user_service, mock_user_repo, mock_token_
     refresh_token = create_token(
         data={"sub": user_email, "id": token_id},
         expires_delta=timedelta(seconds=settings.REFRESH_TOKEN_LIFETIME),
-        token_type="refresh"
+        token_type="refresh",
     )
 
     mock_user = User(id=1, email=user_email)
@@ -180,9 +182,7 @@ async def test_refresh_token_not_in_db(user_service, mock_user_repo, mock_token_
 async def test_get_user_by_access_token_success(user_service, mock_user_repo):
     user_email = "test@example.com"
     access_token = create_token(
-        data={"sub": user_email},
-        expires_delta=timedelta(seconds=settings.ACCESS_TOKEN_LIFETIME),
-        token_type="access"
+        data={"sub": user_email}, expires_delta=timedelta(seconds=settings.ACCESS_TOKEN_LIFETIME), token_type="access"
     )
     mock_user = User(id=1, email=user_email)
     mock_user_repo.get_by_email.return_value = mock_user
@@ -202,7 +202,7 @@ async def test_get_user_by_access_token_wrong_type(user_service):
     refresh_token = create_token(
         data={"sub": "test@example.com", "id": str(uuid.uuid4())},
         expires_delta=timedelta(seconds=settings.REFRESH_TOKEN_LIFETIME),
-        token_type="refresh"
+        token_type="refresh",
     )
     with pytest.raises(AccessError):
         await user_service.get_user_by_access_token(refresh_token)
