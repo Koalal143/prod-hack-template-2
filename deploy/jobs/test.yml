@@ -3,7 +3,7 @@ uv_install:
   stage: test
   image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_VERSION-$BASE_LAYER
   variables:
-    UV_CACHE_DIR: $CI_PROJECT_DIR/backend/.venv/
+    UV_CACHE_DIR: backend/.venv/
     UV_VERSION: "0.5"
     PYTHON_VERSION: "3.12"
     BASE_LAYER: bookworm-slim
@@ -23,7 +23,7 @@ uv_install:
     - uv cache prune --ci
   artifacts:
     paths:
-      - $CI_PROJECT_DIR/backend/.venv/
+      - backend/.venv/
     expire_in: 1h
 
 db_up:
@@ -31,18 +31,22 @@ db_up:
   image: docker:24
   services:
     - docker:24-dind
-  script:
+  before_script:
     - cp $TEST_ENV_FILE .env
     - cd deploy/docker
+  script:
     - docker compose -f docker-compose.test.yml --env-file ../../.env up -d db --build
 
 migrations_check:
   image: python:3.12-slim-bookworm
+  needs:
+    - job: uv_install
+      artifacts: true
   dependencies:
-    - uv_install
     - db_up
-  script:
+  before_script:
     - cp $TEST_ENV_FILE .env
     - cd backend
+  script:
     - source .venv/bin/activate
     - alembic check
