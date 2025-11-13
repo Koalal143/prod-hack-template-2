@@ -41,6 +41,7 @@ migrations_check:
     - job: uv_install
       artifacts: true
   before_script:
+    - cp $TEST_ENV_FILE .env
     - cd backend
   script:
     - source .venv/bin/activate
