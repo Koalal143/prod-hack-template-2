@@ -1,5 +1,5 @@
 ---
-.uv_install:
+uv_install:
   stage: test
   image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_VERSION-$BASE_LAYE
   variables:
@@ -24,7 +24,7 @@
     paths:
       - backend/.venv/
 
-.db_up:
+db_up:
   stage: test
   image: docker:24
   services:
@@ -37,8 +37,8 @@
 migrations_check:
   image: python:3.12-slim-bookworm
   dependencies:
-    - .uv_install
-    - .db_up
+    - uv_install
+    - db_up
   script:
     - cp $TEST_ENV_FILE .env
     - cd backend
