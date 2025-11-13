@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_HOST: str
     POSTGRES_DB: str
+    POSTGRES_PORT: int = 5432
     POSTGRES_PASSWORD: str
 
     REDIS_HOST: str = "localhost"
@@ -44,7 +45,7 @@ class Settings(BaseSettings):
                 host=self.POSTGRES_HOST,
                 username=self.POSTGRES_USER,
                 password=self.POSTGRES_PASSWORD,
-                port=5432,
+                port=self.POSTGRES_PORT,
                 path=f"{self.POSTGRES_DB}",
             )
         )
