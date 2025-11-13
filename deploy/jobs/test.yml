@@ -45,4 +45,5 @@ migrations_check:
     - cd backend
   script:
     - source .venv/bin/activate
+    - alembic upgrade head
     - alembic check
