@@ -5,7 +5,7 @@ from aiobotocore.client import AioBaseClient
 from fastapi import Depends
 
 from src.core.s3.dependencies import get_s3_client
-from src.schemas.files import FileUploadUrlSchema, FileUrlSchema
+from src.schemas.files import FileUploadUrlSchema, FileUrlSchema, FileDownloadUrlsSchema
 from src.settings import settings
 
 
@@ -27,9 +27,14 @@ class FileService:
         url = await self._get_presigned_url("put_object", key)
         return FileUploadUrlSchema(key=key, url=url)
 
-    async def get_download_url(self, key: str) -> FileUrlSchema:
-        url = await self._get_presigned_url("get_object", key)
-        return FileUrlSchema(url=url)
+    async def get_download_urls(self, keys: list[str]) -> FileDownloadUrlsSchema:
+        data = []
+
+        for key in keys:
+            url = await self._get_presigned_url("get_object", key)
+            data.append(FileUploadUrlSchema(key=key, url=url))
+
+        return FileDownloadUrlsSchema(urls=data)
 
 
 async def get_file_service(s3_client: Annotated[AioBaseClient, Depends(get_s3_client)]) -> FileService:

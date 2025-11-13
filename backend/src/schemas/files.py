@@ -11,3 +11,11 @@ class FileUrlSchema(BaseModel):
 
 class FileUploadUrlSchema(FileUrlSchema):
     key: str
+
+
+class FileDownloadUrlsSchema(BaseModel):
+    urls: list[FileUploadUrlSchema]
+
+
+class KeysSchema(BaseModel):
+    keys: list[str]
