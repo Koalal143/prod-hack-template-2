@@ -1,0 +1,45 @@
+---
+.uv-install:
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_VERSION-$BASE_LAYE
+  variables:
+    UV_CACHE_DIR: backend/.uv-cache
+    UV_VERSION: "0.5"
+    PYTHON_VERSION: "3.12"
+    BASE_LAYER: bookworm-slim
+    # GitLab CI creates a separate mountpoint for the build directory,
+    # so we need to copy instead of using hard links.
+    UV_LINK_MODE: copy
+    cache:
+    - key:
+        files:
+          - backend/uv.lock
+      paths:
+        - $UV_CACHE_DIR
+  script:
+    - cd backend
+    - uv sync --locked --group test
+    - uv cache prune --ci
+  artifacts:
+    paths:
+      - backend/.venv/
+
+.db-up:
+  stage: setup
+  image: docker:24
+  services:
+    - docker:24-dind
+  script:
+    - cp $TEST_ENV_FILE .env
+    - cd deploy/docker
+    - docker compose -f docker-compose.test.yml --env-file ../../.env up -d db --build
+
+migrations_check:
+  image: python:3.12-slim-bookworm
+  dependencies:
+    - .uv-install
+    - .db-up
+  script:
+    - cp $TEST_ENV_FILE .env
+    - cd backend
+    - source .venv/bin/activate
+    - alembic check
