@@ -16,12 +16,12 @@ def get_password_hash(password: str) -> str:
     return pbkdf2_sha256.hash(password)
 
 
-def create_token(data: dict, expires_delta: timedelta) -> str:
+def create_token(data: dict, expires_delta: timedelta, token_type: str) -> str:
     to_encode = data.copy()
 
     if expires_delta:
         expire = datetime.now(UTC) + expires_delta
-        to_encode.update({"exp": expire})
+        to_encode.update({"exp": expire, "type": token_type})
 
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm="HS256")
 

@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     SECRET_KEY: str = Field(default_factory=lambda: secrets.token_urlsafe(32))
     MODE: Literal["prod", "dev", "test"] = "prod"
 
+    ACCESS_TOKEN_LIFETIME: int = 60 * 60 * 24
+    REFRESH_TOKEN_LIFETIME: int = 60 * 60 * 24 * 31
+
     POSTGRES_USER: str
     POSTGRES_HOST: str
     POSTGRES_DB: str

@@ -15,12 +15,12 @@ async def test_user_flow(client: AsyncClient) -> None:
             "second_name": "John",
         },
     )
-    assert response.status_code == status.HTTP_200_OK
+    assert response.status_code == status.HTTP_201_CREATED
     register_data = response.json()
-    assert "id" in register_data
-    assert "access_token" in register_data
+    assert "user" in register_data
+    assert "tokens" in register_data
 
-    access_token = register_data["access_token"]
+    access_token = register_data["tokens"]["access_token"]
 
     # Login
     response = await client.post(

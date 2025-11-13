@@ -3,6 +3,9 @@ from typing import Annotated
 
 from pydantic import AfterValidator, BaseModel, ConfigDict, EmailStr
 
+from src.schemas.tokens import TokenReadSchema
+
+
 MIN_PASSWORD_LENGTH = 8
 
 
@@ -45,11 +48,6 @@ class UserCreateSchema(UserBaseSchema):
     model_config = ConfigDict(from_attributes=True)
 
 
-class UserRegisterReadSchema(UserBaseSchema):
-    id: int
-    access_token: str
-
-
 class UserLoginSchema(BaseModel):
     email: EmailStr
     password: str
@@ -57,3 +55,8 @@ class UserLoginSchema(BaseModel):
 
 class UserReadSchema(UserBaseSchema):
     id: int
+
+
+class UserRegisterSchema(BaseModel):
+    user: UserReadSchema
+    tokens: TokenReadSchema

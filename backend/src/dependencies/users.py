@@ -1,20 +1,21 @@
 from http.client import HTTPException
 from typing import Annotated
 
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from src.core.security import verify_token
+from src.core.error import AccessError
 from src.models.users import User
-from src.repositories.users import UserRepository, get_user_repository
+from src.services.users import UserService, get_user_service
 
 
 async def get_current_user(
     credentials: Annotated[HTTPAuthorizationCredentials, Depends(HTTPBearer())],
-    repo: Annotated[UserRepository, Depends(get_user_repository)],
+    service: Annotated[UserService, Depends(get_user_service)],
 ) -> User:
-    payload = verify_token(credentials.credentials)
-    if payload is None:
-        raise HTTPException(403, "Токен недействителен или истек.")
 
-    return await repo.get_by_email(payload.sub)
+    try:
+        return await service.get_user_by_access_token(credentials.credentials)
+    except AccessError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
