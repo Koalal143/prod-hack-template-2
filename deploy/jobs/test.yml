@@ -27,13 +27,20 @@ uv_install:
     expire_in: 1h
 
 
-env_vars:
+db_up:
   stage: build
-  script:
+  image: python:3.12
+  services:
+    - name: postgres:16
+      alias: db
+  before_script:
     - cp $TEST_ENV_FILE .env
-  artifacts:
-    reports:
-      dotenv: .env
+    - set -o allexport
+    - source .env
+    - set +o allexport
+  script:
+    - echo "DB service is ready"
+
 
 migrations_check:
   image: python:3.12-slim-bookworm
@@ -43,8 +50,11 @@ migrations_check:
   needs:
     - job: uv_install
       artifacts: true
+    - job: db_up
+      artifacts: false
   before_script:
     - cd backend
   script:
+    - cp $TEST_ENV_FILE .env
     - source .venv/bin/activate
     - alembic check
