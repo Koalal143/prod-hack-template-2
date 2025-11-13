@@ -6,16 +6,16 @@ uv_install:
     UV_CACHE_DIR: backend/.uv-cache
     UV_VERSION: "0.5"
     PYTHON_VERSION: "3.12"
-    BASE_LAYER: bookworm-slim
+    BASE_LAYER: "bookworm-slim"
     # GitLab CI creates a separate mountpoint for the build directory,
     # so we need to copy instead of using hard links.
     UV_LINK_MODE: copy
-    cache:
-    - key:
-        files:
-          - backend/uv.lock
-      paths:
-        - $UV_CACHE_DIR
+  cache:
+  - key:
+      files:
+        - backend/uv.lock
+    paths:
+      - $UV_CACHE_DIR
   script:
     - cd backend
     - uv sync --locked --group test
