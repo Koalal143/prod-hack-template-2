@@ -26,24 +26,45 @@ uv_install:
       - backend/.venv/
     expire_in: 1h
 
-migrations_check:
-  image: python:3.12-slim-bookworm
-  services:
-    - name: postgres:16
-      alias: db
-  variables:
+.postgres_variables:
     POSTGRES_DB: ${TEST_POSTGRES_DB}
     POSTGRES_USER: ${TEST_POSTGRES_USER}
     POSTGRES_PASSWORD: ${TEST_POSTGRES_PASSWORD}
     POSTGRES_HOST: ${TEST_POSTGRES_HOST}
     POSTGRES_PORT: ${TEST_POSTGRES_PORT}
+
+migrations_check:
+  image: python:3.12-slim-bookworm
+  extends:
+    .postgres_variables
+  services:
+    - name: postgres:16
+      alias: db
   needs:
     - job: uv_install
       artifacts: true
   before_script:
     - cp $TEST_ENV_FILE .env
     - cd backend
-  script:
     - source .venv/bin/activate
+  script:
     - alembic upgrade head
     - alembic check
+
+
+tests:
+  image: python:3.12-slim-bookworm
+  extends:
+    .postgres_variables
+  services:
+    - name: postgres:16
+      alias: db
+  needs:
+    - job: uv_install
+      artifacts: true
+  before_script:
+    - cp $TEST_ENV_FILE .env
+    - cd backend
+    - source .venv/bin/activate
+  script:
+    - pytest ./tests'
