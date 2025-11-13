@@ -10,6 +10,7 @@ uv_install:
     # GitLab CI creates a separate mountpoint for the build directory,
     # so we need to copy instead of using hard links.
     UV_LINK_MODE: copy
+    GIT_CLEAN_FLAGS: none
   cache:
   - key:
       files:
@@ -23,6 +24,7 @@ uv_install:
   artifacts:
     paths:
       - backend/.venv/
+    expire_in: 1h
 
 db_up:
   stage: test
