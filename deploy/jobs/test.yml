@@ -40,13 +40,9 @@ migrations_check:
   services:
     - name: postgres:16
       alias: db
-  variables:
-    POSTGRES_HOST: db
   needs:
     - job: uv_install
       artifacts: true
-    - job: db_up
-      artifacts: false
   before_script:
     - cd backend
   script:
