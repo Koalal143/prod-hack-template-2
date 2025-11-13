@@ -35,21 +35,13 @@ env_vars:
     reports:
       dotenv: .env
 
-db_up:
-  stage: build
+migrations_check:
+  image: python:3.12-slim-bookworm
   services:
     - name: postgres:16
       alias: db
   variables:
-    # если хочешь, можно подтянуть из .env вручную или скопировать значения сюда
-    POSTGRES_DB: ${POSTGRES_DB}
-    POSTGRES_USER: ${POSTGRES_USER}
-    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     POSTGRES_HOST: db
-    POSTGRES_PORT: ${POSTGRES_PORT}
-
-migrations_check:
-  image: python:3.12-slim-bookworm
   needs:
     - job: uv_install
       artifacts: true
