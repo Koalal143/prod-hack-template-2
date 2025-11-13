@@ -6,7 +6,7 @@ from fastapi import Depends
 from sqlalchemy.exc import IntegrityError
 
 from src.core.error import AccessError, ConflictError, NotFoundError
-from src.core.security import create_token, get_password_hash, verify_password, verify_token
+from src.core.security import create_token, get_string_hash, verify_hash, verify_token
 from src.models.users import User
 from src.repositories.tokens import TokenRepository, get_token_repository
 from src.repositories.users import UserRepository, get_user_repository
@@ -40,7 +40,7 @@ class UserService:
 
         token = create_token(data={"sub": user.email, "id": token_id},
                              expires_delta=timedelta(seconds=settings.REFRESH_TOKEN_LIFETIME), token_type="refresh")
-        await self.token_repository.create({"token_hash": get_password_hash(token), "id": token_id})
+        await self.token_repository.create({"token_hash": get_string_hash(token), "id": token_id})
         return token
 
     async def register(self, user_create: UserCreateSchema) -> UserRegisterSchema:
@@ -49,7 +49,7 @@ class UserService:
         """
         user_create_dict = user_create.model_dump()
         user_create_dict.pop("password")
-        user_create_dict["password_hash"] = get_password_hash(user_create.password)
+        user_create_dict["password_hash"] = get_string_hash(user_create.password)
 
         try:
             user = await self.user_repository.create(user_create_dict)
@@ -75,7 +75,7 @@ class UserService:
         if user is None:
             raise NotFoundError
 
-        if not verify_password(user_login.password, user.password_hash):
+        if not verify_hash(user_login.password, user.password_hash):
             raise AccessError
 
         return TokenReadSchema(
@@ -94,7 +94,7 @@ class UserService:
         user = await self.user_repository.get_by_email(payload.sub)
         token_in_db = await self.token_repository.get(payload.id)
 
-        if (not token_in_db) or (not user) or (not verify_password(refresh_token, token_in_db.token_hash)):
+        if (not token_in_db) or (not user) or (not verify_hash(refresh_token, token_in_db.token_hash)):
             raise AccessError
 
         await self.token_repository.delete(token_in_db)

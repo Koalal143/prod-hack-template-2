@@ -8,12 +8,12 @@ from src.schemas.tokens import TokenPayload
 from src.settings import settings
 
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pbkdf2_sha256.verify(plain_password, hashed_password)
+def verify_hash(plain_string: str, hashed_string: str) -> bool:
+    return pbkdf2_sha256.verify(plain_string, hashed_string)
 
 
-def get_password_hash(password: str) -> str:
-    return pbkdf2_sha256.hash(password)
+def get_string_hash(string: str) -> str:
+    return pbkdf2_sha256.hash(string)
 
 
 def create_token(data: dict, expires_delta: timedelta, token_type: str) -> str:

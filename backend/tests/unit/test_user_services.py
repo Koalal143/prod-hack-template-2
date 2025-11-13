@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 
 from src.core.error import AccessError, ConflictError, NotFoundError
-from src.core.security import create_token, get_password_hash
+from src.core.security import create_token, get_string_hash
 from src.models.tokens import RefreshToken
 from src.models.users import User
 from src.schemas.tokens import TokenReadSchema
@@ -35,7 +35,7 @@ async def test_register_user(user_service, mock_user_repo, mock_token_repo):
     mock_user_repo.create.return_value = mock_user
     user_create = UserCreateSchema(email="test@example.com", password="passwordSDf123.", first_name="test", second_name="test")
 
-    with patch("src.services.users.get_password_hash", return_value="hashed_password"):
+    with patch("src.services.users.get_string_hash", return_value="hashed_password"):
         result = await user_service.register(user_create)
 
         assert isinstance(result, UserRegisterSchema)
@@ -54,7 +54,7 @@ async def test_register_user_conflict(user_service, mock_user_repo):
     mock_user_repo.create.side_effect = ConflictError
     user_create = UserCreateSchema(email="test@example.com", password="passwordSDf123.", first_name="test", second_name="test")
 
-    with patch("src.services.users.get_password_hash", return_value="hashed_password"):
+    with patch("src.services.users.get_string_hash", return_value="hashed_password"):
         with pytest.raises(ConflictError):
             await user_service.register(user_create)
 
@@ -65,7 +65,7 @@ async def test_login_user(user_service, mock_user_repo, mock_token_repo):
     mock_user_repo.get_by_email.return_value = mock_user
     user_login = UserLoginSchema(email="test@example.com", password="passwordSDf123.")
 
-    with patch("src.services.users.verify_password", return_value=True):
+    with patch("src.services.users.verify_hash", return_value=True):
         result = await user_service.login(user_login)
 
         assert isinstance(result, TokenReadSchema)
@@ -91,7 +91,7 @@ async def test_login_user_access_error(user_service, mock_user_repo):
     mock_user_repo.get_by_email.return_value = mock_user
     user_login = UserLoginSchema(email="test@example.com", password="password")
 
-    with patch("src.services.users.verify_password", return_value=False):
+    with patch("src.services.users.verify_hash", return_value=False):
         with pytest.raises(AccessError):
             await user_service.login(user_login)
 
@@ -105,7 +105,7 @@ async def test_refresh_token_success(user_service, mock_user_repo, mock_token_re
         expires_delta=timedelta(seconds=settings.REFRESH_TOKEN_LIFETIME),
         token_type="refresh"
     )
-    hashed_token = get_password_hash(refresh_token)
+    hashed_token = get_string_hash(refresh_token)
 
     mock_user = User(id=1, email=user_email)
     mock_token = RefreshToken(id=token_id, token_hash=hashed_token)
@@ -113,7 +113,7 @@ async def test_refresh_token_success(user_service, mock_user_repo, mock_token_re
     mock_user_repo.get_by_email.return_value = mock_user
     mock_token_repo.get.return_value = mock_token
 
-    with patch("src.services.users.verify_password", return_value=True):
+    with patch("src.services.users.verify_hash", return_value=True):
         result = await user_service.refresh_token(refresh_token)
 
         assert isinstance(result, TokenReadSchema)
