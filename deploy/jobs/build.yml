@@ -1,8 +1,10 @@
 build_backend_image:
-  image: moby/buildkit:0.12.5
+  image:
+    name: moby/buildkit:rootless
+    entrypoint: [""]
   stage: build
   variables:
-    BUILDKITD_FLAGS: "--addr tcp://0.0.0.0:1234"
+    BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
     IMAGE_TAG: $CI_COMMIT_SHA
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend:$IMAGE_TAG
   services:
@@ -13,8 +15,8 @@ build_backend_image:
     - apk add docker-cli
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - buildctl --addr tcp://buildkitd:1234 \
-        build \
+    - |
+      buildctl-daemonless.sh build \
         --frontend dockerfile.v0 \
         --local context=backend \
         --local dockerfile=backend \
