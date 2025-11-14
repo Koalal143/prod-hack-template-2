@@ -41,6 +41,12 @@
     group: "{{ app_user }}"
     mode: '0755'
 
+- name: Login to docker registry
+  community.docker.docker_login:
+    registry_url: "{{ lookup('env', 'CI_REGISTRY') }}"
+    username: "{{ lookup('env', 'CI_REGISTRY_USER') }}"
+    password: "{{ lookup('env', 'CI_REGISTRY_PASSWORD') }}"
+
 - name: Tear down services
   community.docker.docker_compose_v2:
     project_src: "{{ app_dir }}"
@@ -58,3 +64,7 @@
       - "{{ app_dir }}/deploy/docker/docker-compose.prod.yml"
     env_files:
       - "{{ app_dir }}/.env"
+    environment:
+      CI_REGISTRY_IMAGE: "{{ lookup('env', 'CI_REGISTRY_IMAGE') }}"
+      CI_COMMIT_SHA: "{{ lookup('env', 'CI_COMMIT_SHA') }}"
+

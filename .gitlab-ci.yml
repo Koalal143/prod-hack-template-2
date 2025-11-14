@@ -1,5 +1,6 @@
 include:
   - template: Security/Secret-Detection.gitlab-ci.yml
+  - local: /deploy/jobs/build.yml
   - local: /deploy/jobs/deploy.yml
   - local: /deploy/jobs/lint.yml
   - local: /deploy/jobs/test.yml
@@ -27,4 +28,4 @@ deploy:
   stage: deploy
   extends:
     - .global-variables
-    - .deploy_legacy
+    - .deploy
