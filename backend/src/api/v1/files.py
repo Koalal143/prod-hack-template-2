@@ -19,7 +19,6 @@ router = APIRouter(prefix="/files")
         status.HTTP_200_OK: {"description": "Успешное получение URL-адреса для загрузки файла в S3-хранилище."},
     },
 )
-@cache(expire=30)
 async def get_upload_url(
     file_metadata: FileUploadSchema,
     file_service: Annotated[FileService, Depends(get_file_service)],
@@ -37,7 +36,6 @@ async def get_upload_url(
         },
     },
 )
-@cache(expire=30)
 async def get_download_urls(
     keys_data: KeysSchema,
     file_service: Annotated[FileService, Depends(get_file_service)],
