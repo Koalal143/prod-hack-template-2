@@ -8,8 +8,8 @@ build_backend_image:
     IMAGE_TAG: $CI_COMMIT_SHA
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend:$IMAGE_TAG
   before_script:
-    - apk add docker-cli
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - mkdir -p ~/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > ~/.docker/config.json
   script:
     - |
       buildctl-daemonless.sh build \
