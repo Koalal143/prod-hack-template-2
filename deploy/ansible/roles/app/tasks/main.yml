@@ -64,7 +64,7 @@
       - "{{ app_dir }}/deploy/docker/docker-compose.prod.yml"
     env_files:
       - "{{ app_dir }}/.env"
-    environment:
-      CI_REGISTRY_IMAGE: "{{ lookup('env', 'CI_REGISTRY_IMAGE') }}"
-      CI_COMMIT_SHA: "{{ lookup('env', 'CI_COMMIT_SHA') }}"
+  environment:
+    CI_REGISTRY_IMAGE: "{{ lookup('env', 'CI_REGISTRY_IMAGE') }}"
+    CI_COMMIT_SHA: "{{ lookup('env', 'CI_COMMIT_SHA') }}"
 
