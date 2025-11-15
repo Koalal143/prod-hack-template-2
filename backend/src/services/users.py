@@ -11,12 +11,12 @@ from src.models.users import User
 from src.repositories.tokens import TokenRepository, get_token_repository
 from src.repositories.users import UserRepository, get_user_repository
 from src.schemas.tokens import TokenReadSchema
-from src.schemas.users import UserCreateSchema, UserLoginSchema, UserRegisterSchema, UserReadSchema
+from src.schemas.users import UserCreateSchema, UserLoginSchema, UserReadSchema, UserRegisterSchema
 from src.settings import settings
 
 
 class UserService:
-    def __init__(self, user_repository: UserRepository, token_repository: TokenRepository):
+    def __init__(self, user_repository: UserRepository, token_repository: TokenRepository) -> None:
         """
         Зависит сразу от двух репозиториев, поэтому не наследуется от базового класса
         """
@@ -38,7 +38,6 @@ class UserService:
         """
         Генерация refresh токена, также заносится в бд, чтобы после использования его удалить
         """
-
         token_id = str(uuid.uuid4())
 
         token = create_token(

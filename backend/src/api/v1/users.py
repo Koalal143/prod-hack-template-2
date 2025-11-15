@@ -6,7 +6,7 @@ from fastapi.params import Depends
 from src.core.error import AccessError, ConflictError, NotFoundError
 from src.dependencies.users import get_current_user
 from src.models.users import User
-from src.schemas.tokens import TokenReadSchema, RefreshTokenSchema
+from src.schemas.tokens import RefreshTokenSchema, TokenReadSchema
 from src.schemas.users import UserCreateSchema, UserLoginSchema, UserReadSchema, UserRegisterSchema
 from src.services.users import UserService, get_user_service
 
@@ -16,7 +16,6 @@ router = APIRouter(prefix="/users")
 @router.post(
     "/auth/register",
     tags=["Пользователи"],
-    response_model=UserRegisterSchema,
     status_code=status.HTTP_201_CREATED,
     responses={
         201: {"description": "Успешная регистрация и возврат пользователя с токеном."},
@@ -75,7 +74,6 @@ async def profile(user: Annotated[User, Depends(get_current_user)]) -> User:
 @router.post(
     "/token/refresh",
     tags=["Пользователи"],
-    response_model=TokenReadSchema,
     responses={
         200: {"description": "Успешное обновление токенов, старый rerfesh больше не будет работать."},
         401: {"description": "Токен не действителен"},
@@ -87,4 +85,4 @@ async def refresh_token(
     try:
         return await user_service.refresh_token(token_data.refresh_token)
     except AccessError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Токен не действителен")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Токен не действителен") from None
