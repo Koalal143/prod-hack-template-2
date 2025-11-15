@@ -7,7 +7,7 @@ build_backend_image:
     BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
     IMAGE_TAG: $CI_COMMIT_SHA
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend:$IMAGE_TAG
-    CACHE_IMAGE: $CI_REGISTRY_IMAGE:cache
+    CACHE_IMAGE: $CI_REGISTRY_IMAGE/backend:cache
   before_script:
     - mkdir -p ~/.docker
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > ~/.docker/config.json
