@@ -32,7 +32,7 @@
 
 - name: Debug ansible facts
   debug:
-    var: ansible_facts['os_release']['version_codename']
+    var: ansible_facts
 
 
 - name: Add PostgreSQL APT repository
