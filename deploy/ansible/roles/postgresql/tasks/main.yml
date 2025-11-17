@@ -29,9 +29,15 @@
   args:
     creates: /usr/share/keyrings/postgresql.gpg
 
+
+- name: Debug ansible facts
+  debug:
+    var: ansible_facts['os_release']['version_codename']
+
+
 - name: Add PostgreSQL APT repository
   apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+    repo: "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt {{ ansible_facts['os_release']['version_codename'] }}-pgdg main"
     state: present
     filename: 'pgdg'
 
