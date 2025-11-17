@@ -1,4 +1,4 @@
-postgresql_version: 18
+postgresql_version: 17
 backend_db: "db"
 postgresql_user: "postgres"
 postgresql_apt_release: jammy
