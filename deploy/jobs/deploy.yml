@@ -43,5 +43,8 @@
 
 deploy:
   stage: deploy
+  only:
+    - main
+    - master
   extends:
     - .deploy
