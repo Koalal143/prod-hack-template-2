@@ -1,6 +1,6 @@
 ---
 .deploy_base:
-  image: python3.12
+  image: python:3.12
   variables:
     SSH_USER: "$ENV_SSH_USER"
     SSH_HOST: "$ENV_SSH_HOST"
@@ -27,7 +27,6 @@
     - ansible-playbook -i $CI_PROJECT_DIR/deploy/ansible/inventory/hosts.ini $CI_PROJECT_DIR/deploy/ansible/playbook.yml
 
 .deploy_legacy:
-  image: python:3.12
   stage: deploy
   extends:
     - .deploy_base
