@@ -69,6 +69,7 @@ tests:
     - source .venv/bin/activate
   script:
     - pytest --cov=src --cov-report=term --cov-report=xml:coverage.xml ./tests
+  coverage: '/TOTAL\s+\d+\s+\d+\s+(\d+%)/'
   artifacts:
     paths:
       - backend/coverage.xml
