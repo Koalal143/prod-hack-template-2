@@ -68,7 +68,7 @@ tests:
     - cd backend
     - source .venv/bin/activate
   script:
-    - pytest --cov=src --junitxml=report.xml--cov-report=term --cov-report=xml:coverage.xml ./tests
+    - pytest --cov=src --junitxml=report.xml --cov-report=term --cov-report=xml:coverage.xml ./tests
   coverage: '/TOTAL\s+\d+\s+\d+\s+(\d+%)/'
   artifacts:
     paths:
