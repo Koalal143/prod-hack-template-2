@@ -68,11 +68,11 @@ tests:
     - cd backend
     - source .venv/bin/activate
   script:
-    - pytest --cov=src --cov-report=xml ./tests
+    - pytest --cov=src --cov-report=xml:coverage.xml ./tests
   artifacts:
     paths:
       - backend/coverage.xml
     reports:
       coverage_report:
         coverage_format: cobertura
-        path: coverage.xml
+        path: backend/coverage.xml
