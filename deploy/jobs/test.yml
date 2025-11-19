@@ -71,7 +71,7 @@ tests:
     - pytest --cov=src --cov-report=xml ./tests
   artifacts:
     paths:
-      - coverage.xml
+      - backend/coverage.xml
     reports:
       coverage_report:
         coverage_format: cobertura
