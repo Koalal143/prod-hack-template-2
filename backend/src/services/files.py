@@ -5,7 +5,7 @@ from aiobotocore.client import AioBaseClient
 from fastapi import Depends
 
 from src.core.s3.dependencies import get_s3_client
-from src.schemas.files import FileUploadUrlSchema, FileDownloadUrlsSchema
+from src.schemas.files import FileDownloadUrlsSchema, FileUploadUrlSchema
 from src.settings import settings
 
 

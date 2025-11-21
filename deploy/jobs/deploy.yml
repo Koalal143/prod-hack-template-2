@@ -1,40 +1,50 @@
 ---
-.deploy:
+.deploy_base:
   image: python:3.12
-  stage: deploy
+  variables:
+    SSH_USER: "$ENV_SSH_USER"
+    SSH_HOST: "$ENV_SSH_HOST"
+    SSH_PRIVATE_KEY_BASE64: "$ENV_PRIVATE_KEY_BASE64"
   before_script:
-    - pip install ansible
-    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config && chmod 600 ~/.ssh/config
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
-    - ssh-agent sh -c "ssh-add ~/.ssh/id_rsa"
-    - ssh-keyscan -H "$SSH_HOST"
-    - cat $ANSIBLE_HOSTS > $CI_PROJECT_DIR/deploy/ansible/inventory/hosts.ini
-    - cat $ANSIBLE_SECRETS > $CI_PROJECT_DIR/deploy/ansible/secrets.yml
-    - cat $ENV_FILE > $CI_PROJECT_DIR/.env
-    - ansible-galaxy install -r $CI_PROJECT_DIR/deploy/ansible/requirements.yml
-  script:
-    - ansible-playbook -i $CI_PROJECT_DIR/deploy/ansible/inventory/hosts.ini $CI_PROJECT_DIR/deploy/ansible/playbook.yml
-
-.deploy_legacy:
-  image: python:3.12
-  stage: deploy
-  before_script:
-    - apt-get update -y && apt-get install -y rsync openssh-client
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config && chmod 600 ~/.ssh/config
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
     - ssh-agent sh -c "ssh-add ~/.ssh/id_rsa"
     - ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
+    - cp "$ENV_FILE" $CI_PROJECT_DIR/.env
+
+.deploy:
+  stage: deploy
+  extends:
+    - .deploy_base
+  before_script:
+    - !reference [.deploy_base, before_script]
+    - pip install ansible
+    - cp "$ANSIBLE_HOSTS" $CI_PROJECT_DIR/deploy/ansible/inventory/hosts.ini
+    - cp "$ANSIBLE_SECRETS" $CI_PROJECT_DIR/deploy/ansible/secrets.yml
+    - ansible-galaxy install -r $CI_PROJECT_DIR/deploy/ansible/requirements.yml
   script:
-    - cp "$ANSIBLE_SECRETS" deploy/ansible/secrets.yml
-    - cp "$ENV_FILE" .env
-    - cp "$ANSIBLE_HOSTS" deploy/ansible/inventory/hosts.ini
+    - ansible-playbook -i $CI_PROJECT_DIR/deploy/ansible/inventory/hosts.ini $CI_PROJECT_DIR/deploy/ansible/playbook.yml
 
+.deploy_legacy:
+  stage: deploy
+  extends:
+    - .deploy_base
+  before_script:
+    - apt-get update -y && apt-get install -y rsync openssh-client
+    - !reference [.deploy_base, before_script]
+  script:
     - rsync -avz --delete --exclude=".git" --exclude=".gitlab-ci.yml" ./ $SSH_USER@$SSH_HOST:/srv/app/
-
     - ssh $SSH_USER@$SSH_HOST "
         cd /srv/app/deploy/docker &&
         docker compose down &&
         docker compose -f docker-compose.prod.yml --env-file=../../.env up -d --build
       "
+
+deploy:
+  stage: deploy
+  only:
+    - main
+    - master
+  extends:
+    - .deploy

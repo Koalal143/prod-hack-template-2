@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status
 from fastapi_cache.decorator import cache
 
 from src.dependencies.users import get_current_user
-from src.schemas.files import FileUploadSchema, FileUploadUrlSchema, KeysSchema, FileDownloadUrlsSchema
+from src.schemas.files import FileDownloadUrlsSchema, FileUploadSchema, FileUploadUrlSchema, KeysSchema
 from src.services.files import FileService, get_file_service
 
 router = APIRouter(prefix="/files")

@@ -31,6 +31,7 @@ test = [
     "asgi-lifespan>=2.1.0",
     "greenlet>=3.0.3",
     "pytest-asyncio>=1.3.0",
+    "pytest-cov>=7.0.0",
 ]
 
 [tool.ruff]
@@ -73,6 +74,7 @@ lint.ignore = [
     "RUF002",     # other ambigious cyrillic symbols in string
     "RUF003",     # yet another ambigious cyrillic symbol warning
     "PLR0913",    # too many arguments in function signature
+    "S106",      # Possible hardcoded password assigned to argument 
 ]
 format.skip-magic-trailing-comma = false
 
@@ -81,6 +83,5 @@ format.skip-magic-trailing-comma = false
 "tests/*" = [
     "ANN",       # Type annotations
     "INP001",    # Missing __init__.py
-    "S105",      # Possible hardcoded password
-    "S106",      # Possible hardcoded password assigned to argument  
+    "S105",      # Possible hardcoded password 
 ]

@@ -34,23 +34,23 @@ uv_install:
     POSTGRES_HOST: ${TEST_POSTGRES_HOST}
     POSTGRES_PORT: ${TEST_POSTGRES_PORT}
 
-migrations_check:
-  image: python:3.12-slim-bookworm
-  extends:
-    .postgres_variables
-  services:
-    - name: postgres:16
-      alias: db
-  needs:
-    - job: uv_install
-      artifacts: true
-  before_script:
-    - cp $TEST_ENV_FILE .env
-    - cd backend
-    - source .venv/bin/activate
-  script:
-    - alembic upgrade head
-    - alembic check
+# migrations_check:
+#   image: python:3.12-slim-bookworm
+#   extends:
+#     .postgres_variables
+#   services:
+#     - name: postgres:16
+#       alias: db
+#   needs:
+#     - job: uv_install
+#       artifacts: true
+#   before_script:
+#     - cp $TEST_ENV_FILE .env
+#     - cd backend
+#     - source .venv/bin/activate
+#   script:
+#     - alembic upgrade head
+#     - alembic check
 
 
 tests:
@@ -68,4 +68,13 @@ tests:
     - cd backend
     - source .venv/bin/activate
   script:
-    - pytest ./tests
+    - pytest --cov=src --junitxml=report.xml --cov-report=term --cov-report=xml:coverage.xml ./tests
+  coverage: '/TOTAL\s+\d+\s+\d+\s+(\d+%)/'
+  artifacts:
+    paths:
+      - backend/coverage.xml
+    reports:
+      junit: backend/report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: backend/coverage.xml

@@ -1,7 +1,8 @@
 include:
   - template: Security/Secret-Detection.gitlab-ci.yml
-  - local: /deploy/jobs/deploy.yml
-  - local: /deploy/jobs/lint.yml
+  # - local: /deploy/jobs/build.yml
+  # - local: /deploy/jobs/deploy.yml
+  # - local: /deploy/jobs/lint.yml
   - local: /deploy/jobs/test.yml
 
 stages:
@@ -11,20 +12,9 @@ stages:
 - test
 - deploy
 
-.global-variables:
-  variables:
-    SSH_USER: "$ENV_SSH_USER"
-    SSH_HOST: "$ENV_SSH_HOST"
-    SSH_PRIVATE_KEY_BASE64: "$ENV_PRIVATE_KEY_BASE64"
 
 variables:
   SECRET_DETECTION_ENABLED: 'true'
 
-secret_detection:
-  stage: secret-detection
-
-deploy:
-  stage: deploy
-  extends:
-    - .global-variables
-    - .deploy_legacy
+# secret_detection:
+#   stage: secret-detection

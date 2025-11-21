@@ -9,7 +9,7 @@ from src.core.security import create_token, get_string_hash
 from src.models.tokens import RefreshToken
 from src.models.users import User
 from src.schemas.tokens import TokenReadSchema
-from src.schemas.users import UserCreateSchema, UserLoginSchema, UserRegisterSchema, UserReadSchema
+from src.schemas.users import UserCreateSchema, UserLoginSchema, UserReadSchema, UserRegisterSchema
 from src.services.users import UserService
 from src.settings import settings
 
@@ -58,9 +58,8 @@ async def test_register_user_conflict(user_service, mock_user_repo):
         email="test@example.com", password="passwordSDf123.", first_name="test", second_name="test"
     )
 
-    with patch("src.services.users.get_string_hash", return_value="hashed_password"):
-        with pytest.raises(ConflictError):
-            await user_service.register(user_create)
+    with patch("src.services.users.get_string_hash", return_value="hashed_password"), pytest.raises(ConflictError):
+        await user_service.register(user_create)
 
 
 @pytest.mark.asyncio
@@ -95,9 +94,8 @@ async def test_login_user_access_error(user_service, mock_user_repo):
     mock_user_repo.get_by_email.return_value = mock_user
     user_login = UserLoginSchema(email="test@example.com", password="password")
 
-    with patch("src.services.users.verify_hash", return_value=False):
-        with pytest.raises(AccessError):
-            await user_service.login(user_login)
+    with patch("src.services.users.verify_hash", return_value=False), pytest.raises(AccessError):
+        await user_service.login(user_login)
 
 
 @pytest.mark.asyncio

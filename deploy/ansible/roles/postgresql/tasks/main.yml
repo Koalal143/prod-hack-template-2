@@ -29,11 +29,19 @@
   args:
     creates: /usr/share/keyrings/postgresql.gpg
 
-- name: Add PostgreSQL APT repository
+- name: Add PostgreSQL repository for Ubuntu <= 20
   apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt {{ ansible_lsb.codename }}-pgdg main"
+    repo: "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt-archive.postgresql.org/pub/repos/apt focal-pgdg main"
     state: present
     filename: 'pgdg'
+  when: ansible_distribution_version is version('20.04', '<=')
+
+- name: Add PostgreSQL repository for Ubuntu > 20
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/postgresql.gpg] https://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+    state: present
+    filename: 'pgdg'
+  when: ansible_distribution_version is version('20.04', '>')
 
 - name: Update apt cache
   apt:

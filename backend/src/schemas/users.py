@@ -5,7 +5,6 @@ from pydantic import AfterValidator, BaseModel, ConfigDict, EmailStr
 
 from src.schemas.tokens import TokenReadSchema
 
-
 MIN_PASSWORD_LENGTH = 8
 
 
