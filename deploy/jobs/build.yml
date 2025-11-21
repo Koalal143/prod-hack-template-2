@@ -6,7 +6,7 @@ build_backend_image:
   variables:
     BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
     IMAGE_TAG: $CI_COMMIT_SHA
-    IMAGE_NAME: $CI_REGISTRY_IMAGE/backend:$IMAGE_TAG
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/backend:prod
     CACHE_IMAGE: $CI_REGISTRY_IMAGE/backend:cache
   before_script:
     - mkdir -p ~/.docker
