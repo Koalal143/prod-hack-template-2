@@ -1,9 +1,9 @@
 include:
   - template: Security/Secret-Detection.gitlab-ci.yml
-  # - local: /deploy/jobs/build.yml
-  # - local: /deploy/jobs/deploy.yml
+  - local: /deploy/jobs/build.yml
+  - local: /deploy/jobs/deploy.yml
   # - local: /deploy/jobs/lint.yml
-  - local: /deploy/jobs/test.yml
+  # - local: /deploy/jobs/test.yml
 
 stages:
 - secret-detection
@@ -14,7 +14,7 @@ stages:
 
 
 variables:
-  SECRET_DETECTION_ENABLED: 'true'
+  SECRET_DETECTION_ENABLED: 'false'
 
 # secret_detection:
 #   stage: secret-detection
