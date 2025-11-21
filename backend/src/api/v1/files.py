@@ -1,7 +1,6 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
-from fastapi_cache.decorator import cache
 
 from src.dependencies.users import get_current_user
 from src.schemas.files import FileDownloadUrlsSchema, FileUploadSchema, FileUploadUrlSchema, KeysSchema

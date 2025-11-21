@@ -67,6 +67,7 @@ lint.ignore = [
     "TD002",
     "TD003",
     "FIX002",     # too verbose descriptions of todos
+    "F821",
     "S101",       # prohibited assert statement
     "ARG001",     # unused function argument
     "ANN401",     # disallow Any type
