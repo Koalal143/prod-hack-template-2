@@ -1,0 +1,14 @@
+.card {
+    background: var(--main);
+    border: 5px solid var(--accent);
+    border-radius: 25px;
+    display: grid;
+    gap: 50px;
+    grid-template-rows: 1fr 1fr;
+    justify-items: center;
+}
+
+.first {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
