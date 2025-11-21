@@ -27,6 +27,11 @@ services:
       context: ../../backend
       args:
        - MODE=dev
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/v1/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     environment:
       POSTGRES_HOST: db
       POSTGRES_DB: db
