@@ -1,17 +1,20 @@
 ---
 .deploy_base:
   image: python:3.12
-  variables:
-    SSH_USER: "$ENV_SSH_USER"
-    SSH_HOST: "$ENV_SSH_HOST"
-    SSH_PRIVATE_KEY_BASE64: "$ENV_PRIVATE_KEY_BASE64"
   before_script:
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config && chmod 600 ~/.ssh/config
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
+  
+    - echo "$ENV_PRIVATE_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa 
+    - chmod 400 ~/.ssh/id_rsa
+
+    - echo "$ENV_PRIVATE_KEY_BETA_BASE64" | base64 -d > ~/.ssh/id_rsa 
+    - chmod 400 ~/.ssh/id_rsa
+
+  
     - ssh-agent sh -c "ssh-add ~/.ssh/id_rsa"
-    - ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
-    - cp "$ENV_FILE" $CI_PROJECT_DIR/.env
+    - ssh-keyscan -H "$ENV_SSH_HOST" >> ~/.ssh/known_hosts
+    - echo "$ENV_FILE_BASE64" | base64 -d > $CI_PROJECT_DIR/.env
 
 .deploy:
   stage: deploy
@@ -20,8 +23,8 @@
   before_script:
     - !reference [.deploy_base, before_script]
     - pip install ansible
-    - cp "$ANSIBLE_HOSTS" $CI_PROJECT_DIR/deploy/ansible/inventory/hosts.ini
-    - cp "$ANSIBLE_SECRETS" $CI_PROJECT_DIR/deploy/ansible/secrets.yml
+    - echo "$ANSIBLE_HOSTS_BASE64" | base64 -d > $CI_PROJECT_DIR/deploy/ansible/inventory/hosts.ini
+    - echo "$ANSIBLE_SECRETS_BASE64" | base64 -d > $CI_PROJECT_DIR/deploy/ansible/secrets.yml
     - ansible-galaxy install -r $CI_PROJECT_DIR/deploy/ansible/requirements.yml
   script:
     - ansible-playbook -i $CI_PROJECT_DIR/deploy/ansible/inventory/hosts.ini $CI_PROJECT_DIR/deploy/ansible/playbook.yml
@@ -34,9 +37,9 @@
     - apt-get update -y && apt-get install -y rsync openssh-client
     - !reference [.deploy_base, before_script]
   script:
-    - rsync -avz --delete --exclude=".git" --exclude=".gitlab-ci.yml" ./ $SSH_USER@$SSH_HOST:/srv/app/
-    - ssh $SSH_USER@$SSH_HOST "
-        cd /srv/app/deploy/docker &&
+    - rsync -avz --delete --exclude=".git" --exclude=".gitlab-ci.yml" ./ $ENV_SSH_USER@$ENV_SSH_HOST:/home/student/app
+    - ssh $ENV_SSH_USER@$ENV_SSH_HOST "
+        cd /home/student/app/deploy/docker &&
         docker compose down &&
         docker compose -f docker-compose.prod.yml --env-file=../../.env up -d --build
       "
