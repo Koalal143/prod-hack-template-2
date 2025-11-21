@@ -59,7 +59,7 @@ services:
       - main
   
   nginx:
-    build: ../../nginx
+    image: nginx:stable-alpine
     ports:
       - "80:80"
     depends_on:
